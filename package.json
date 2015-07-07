@@ -8,33 +8,31 @@
     "type": "git",
     "url": "git://github.com/10gen/scout.git"
   },
+  "dependency-check": {
+    "ignore": [
+      "mongodb-datasets"
+    ]
+  },
   "scripts": {
     "docs": "gulp docs",
+    "start-server": "node bin/start-server.js",
+    "stop-server": "node bin/stop-server.js",
+    "prestart": "npm run start-server",
     "start": "zuul --local 3001 --open -- test/*.test.js",
-    "// pretest": "node bin/pretest.js",
+    "poststart": "npm run stop-server",
+    "pretest": "npm run start-server",
     "test": "zuul -- test/*.test.js",
-    "// posttest": "node bin/pretest.js"
+    "posttest": "npm run stop-server",
+    "check": "mongodb-js-precommit"
   },
   "dependencies": {
-    "ampersand-collection": "^1.4.5",
-    "ampersand-collection-filterable": "^0.2.1",
-    "ampersand-model": "^5.0.3",
-    "ampersand-rest-collection": "^4.0.0",
-    "ampersand-state": "^4.5.6",
-    "async": "^1.3.0",
-    "boom": "^2.8.0",
     "debug": "^2.2.0",
     "event-stream": "^3.3.1",
-    "jsonwebtoken": "^5.0.2",
     "mongodb-extended-json": "^1.3.1",
     "mongodb-ns": "^1.0.0",
-    "mongodb-url": "0.0.1",
-    "mongoscope-config": "^0.1.0",
     "socket.io-client": "^1.3.5",
-    "socket.io-stream": "^0.8.0",
-    "superagent": "^1.2.0",
-    "underscore": "^1.8.3",
-    "uuid": "^2.0.1"
+    "socket.io-stream": "0.6.1",
+    "superagent": "^1.2.0"
   },
   "devDependencies": {
     "backbone": "^1.2.1",
@@ -46,6 +44,10 @@
     "gulp-util": "^3.0.6",
     "handlebars": "^3.0.3",
     "mocha": "^2.2.5",
+    "mongodb-datasets": "^0.1.5",
+    "mongodb-js-precommit": "^0.1.2",
+    "pre-commit": "^1.0.10",
+    "scout-server": "http://bin.mongodb.org/js/scout-server/v0.0.3/scout-server-0.0.3.tar.gz",
     "through2": "^2.0.0",
     "zuul": "^3.2.0"
   }
