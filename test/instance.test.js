@@ -1,5 +1,5 @@
-var assert = require('assert'),
-  helpers = require('./helpers');
+var assert = require('assert');
+var helpers = require('./helpers');
 
 describe('Instance', function() {
   before(helpers.before);
@@ -26,7 +26,7 @@ describe('Instance', function() {
       done();
     });
   });
-  it('should have the instance in the deployment list', function(done) {
+  it.skip('should have the instance in the deployment list', function(done) {
     helpers.client.deployments(function(err, res) {
       assert.ifError(err);
       assert(Array.isArray(res), 'Deployments list should be an array');

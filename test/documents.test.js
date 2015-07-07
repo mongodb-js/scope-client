@@ -1,5 +1,5 @@
-var assert = require('assert'),
-  helpers = require('./helpers');
+var assert = require('assert');
+var helpers = require('./helpers');
 
 describe('Documents', function() {
   before(helpers.before);
@@ -17,13 +17,14 @@ describe('Documents', function() {
   };
 
   it('should make us create the collection', function(done) {
-    helpers.client.document('test.scopes', doc).create(function(err, res, raw) {
+    helpers.client.document('test.scopes', doc).create(function(_, res, raw) {
       assert.equal(raw.status, 404);
       done();
     });
   });
   it('should allow us to make the collection', function(done) {
     helpers.client.collection('test.scopes').create(function(err, res, raw) {
+      assert.ifError(err);
       assert.equal(raw.status, 201);
       done();
     });

@@ -24,18 +24,18 @@ describe.skip('Streams', function() {
       expected = res.count;
 
       helpers.client.find('local.startup_log')
-      .on('error', function(err) {
-        console.error(err);
-        done(err);
-      })
-      .on('data', function() {
-        seen++;
-      })
-      .on('end', function() {
-        assert.equal(seen, expected,
-        'Count says ' + expected + ' but only saw ' + seen);
-        done();
-      });
+        .on('error', function(err) {
+          console.error(err);
+          done(err);
+        })
+        .on('data', function() {
+          seen++;
+        })
+        .on('end', function() {
+          assert.equal(seen, expected,
+            'Count says ' + expected + ' but only saw ' + seen);
+          done();
+        });
     });
   });
   // it.skip('should allow streaming top #slow', function(done) {
@@ -73,15 +73,15 @@ describe.skip('Streams', function() {
       bulk = dest.createWriteStream({
         batchSize: 50
       })
-      .on('flush', function(res) {
-        debug('%d flushed', res.inserted_count);
-        committed += res.inserted_count;
-      })
-      .on('error', done)
-      .on('end', function() {
-        assert.equal(committed, 50);
-        done();
-      });
+        .on('flush', function(res) {
+          debug('%d flushed', res.inserted_count);
+          committed += res.inserted_count;
+        })
+        .on('error', done)
+        .on('end', function() {
+          assert.equal(committed, 50);
+          done();
+        });
       datasets(50, {
         n: '{{chance.d10()}}'
       }).pipe(bulk);
@@ -92,14 +92,14 @@ describe.skip('Streams', function() {
       datasets(10, {
         n: '{{chance.d10()}}'
       })
-      .pipe(dest.createWriteStream({
-        batchSize: 100
-      }).on('end', function() {
-        if (complete) return done(new Error('Got end event more than once!'));
-        return (complete = true) && done();
-      }).on('flush', function(res) {
-        assert.equal(res.inserted_count, 10, 'inserted all 10 documents');
-      }));
+        .pipe(dest.createWriteStream({
+          batchSize: 100
+        }).on('end', function() {
+          if (complete) return done(new Error('Got end event more than once!'));
+          return (complete = true) && done();
+        }).on('flush', function(res) {
+          assert.equal(res.inserted_count, 10, 'inserted all 10 documents');
+        }));
     });
   });
 });

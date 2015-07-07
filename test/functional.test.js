@@ -52,7 +52,9 @@ describe('Functional', function() {
           result.push(res);
 
           pending--;
-          if (pending === 0) done();
+          if (pending === 0) {
+            done();
+          }
         });
       });
     });

@@ -3,10 +3,6 @@ var defaults = require('./lib/defaults');
 
 module.exports = createClient;
 
-module.exports.adapters = {
-  Backbone: require('./lib/adapters/backbone')
-};
-
 module.exports.configure = function(config) {
   Object.keys(config).map(function(k) {
     if (k === 'endpoint') {

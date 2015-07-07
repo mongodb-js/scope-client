@@ -1,5 +1,5 @@
-var assert = require('assert'),
-  helpers = require('./helpers');
+var assert = require('assert');
+var helpers = require('./helpers');
 
 describe('Collection', function() {
   var scout;
@@ -28,7 +28,7 @@ describe('Collection', function() {
     it('should create a new one', function(done) {
       scout.collection('test.original_name').create(function(err, res) {
         assert.ifError(err);
-        assert.equal(res.name, 'original_name');
+        assert.equal(res._id, 'test.original_name');
         done();
       });
     });
@@ -96,19 +96,19 @@ describe('Collection', function() {
     });
     it('should support aggregation', function(done) {
       var pipeline = [{
-          $group: {
-            _id: {
-              pid: "$pid"
-            },
-            count: {
-              $sum: 1
-            }
+        $group: {
+          _id: {
+            pid: '$pid'
+          },
+          count: {
+            $sum: 1
           }
-        }, {
-          $sort: {
-            count: -1
-          }
-        }];
+        }
+      }, {
+        $sort: {
+          count: -1
+        }
+      }];
 
       scout.aggregate('local.startup_log', pipeline, function(err, res) {
         assert.ifError(err);

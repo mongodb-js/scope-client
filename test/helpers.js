@@ -19,8 +19,8 @@ module.exports = {
     }
     // debug('before: %s', this.test.name);
     module.exports.createClient()
-    .once('error', done)
-    .once('readable', done.bind(null, null));
+      .once('error', done)
+      .once('readable', done.bind(null, null));
   },
   after: function(done) {
     if (!module.exports.client) {

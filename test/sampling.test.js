@@ -1,5 +1,6 @@
-var assert = require('assert'),
-  helpers = require('./helpers');
+var assert = require('assert');
+var helpers = require('./helpers');
+var debug = require('debug')('scout-client:test:sampling');
 
 describe('Sampling', function() {
   before(helpers.before);
@@ -11,11 +12,11 @@ describe('Sampling', function() {
     }, function(err, res) {
       assert.ifError(err);
 
-      var set = {},
-        ids = res.map(function(d) {
-          set[d._id] = true;
-          return d._id;
-        });
+      var set = {};
+      var ids = res.map(function(d) {
+        set[d._id] = true;
+        return d._id;
+      });
       assert.equal(Object.keys(ids).length, ids.length, 'Returned non-uniques');
       done();
     });
@@ -27,6 +28,25 @@ describe('Sampling', function() {
       assert(!Array.isArray(res));
       assert(res._id);
       done();
+    });
+  });
+
+  describe('Streaming', function() {
+    it('should work', function(done) {
+      var docs = [];
+      helpers.client.sample('local.startup_log', {
+        limit: 5
+      })
+        .on('error', done)
+        .on('data', function(d) {
+          debug('got sampled doc from stream', d);
+          docs.push(d);
+        })
+        .on('end', function() {
+          debug('Sample stream ended!', docs);
+          assert(docs.length > 0);
+          done();
+        });
     });
   });
 });

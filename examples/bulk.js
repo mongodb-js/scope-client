@@ -18,16 +18,17 @@ var schema = {
 };
 var ns = 'test.oid_and_number';
 
-console.log('Generating ' + size + ' documents and inserting them into `'+ns+'`...');
+console.log('Generating ' + size + ' documents and inserting them into `' + ns + '`...');
 
-var start = Date.now(), docs = 0;
+var start = Date.now(),
+  docs = 0;
 var backend = scope.collection(ns).createWriteStream()
-  .on('end', function(){
+  .on('end', function() {
     console.log('complete!');
     console.log((Date.now() - start) + 'ms');
     scope.close();
   })
-  .on('flush', function(res){
+  .on('flush', function(res) {
     docs += res.inserted_count;
     console.log('progress: ' + docs + '/' + size);
   });

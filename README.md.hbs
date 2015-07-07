@@ -57,3 +57,9 @@ var scout = require('scout-client')([opts]);
 
 {{/each}}
 {{/each}}
+
+## Development
+
+> Note: socket.io-stream 0.8.0 causes a `RangeError: Maximum call stack size exceeded at _hasBinary`.
+> We will investigate further when possible, but for now, socket.io-stream in dependencies
+> *should stay at 0.6.1*.

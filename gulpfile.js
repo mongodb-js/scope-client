@@ -63,13 +63,15 @@ function getApis(methods, done) {
       if (tag.type === 'group') return group = tag.string;
       if (tag.type === 'stability') return stability = tag.string;
       if (tag.type === 'streamable') return streamable = true;
-      if (tag.type === 'todo') todos.push(tag.string);
+      if (tag.type === 'todo') {
+        todos.push(tag.string);
+      }
     });
 
     if (!isProperty && opts_arg && options.length > 0) {
       opts_arg.description += '\n' + options.map(function(opt) {
-        return '    - `' + opt.name + '` (' + opt.types.join('|') + ') ... ' + opt.description;
-      }).join('\n') + '\n';
+          return '    - `' + opt.name + '` (' + opt.types.join('|') + ') ... ' + opt.description;
+        }).join('\n') + '\n';
     }
 
     apis.push({
@@ -96,42 +98,42 @@ function getContext(apis, done) {
   });
 
   context.apis_by_group = _.chain(apis)
-  .filter(function(api, i) {
-    if (i === 0) return false; // @todo handle module level docs...
-    if (!api.group) return false; // private or ignore
-    return true;
-  })
-  .map(function(api) {
-    return {
-      name: api.name,
-      group: api.group,
-      args: api.args.join(', '),
-      badge: STABILITY_BADGES[api.stability],
-      stability: api.stability,
-      description: api.description,
-      hasExamples: api.examples.length > 0,
-      examples: api.examples,
-      hasParams: !api.isProperty && api.params.length > 0,
-      params: _.map(api.params, function(d) {
-        return {
-          name: d.name,
-          validation: d.optional ? 'optional' : 'required',
-          types: d.types.join('|'),
-          description: d.description ? '... ' + d.description : ''
-        };
-      }),
-      hasTodos: api.todos.length > 0,
-      todos: api.todos
-    };
-  })
-  .groupBy('group')
-  .map(function(apis, group) {
-    return {
-      group: group,
-      apis: apis
-    };
-  })
-  .value();
+    .filter(function(api, i) {
+      if (i === 0) return false; // @todo handle module level docs...
+      if (!api.group) return false; // private or ignore
+      return true;
+    })
+    .map(function(api) {
+      return {
+        name: api.name,
+        group: api.group,
+        args: api.args.join(', '),
+        badge: STABILITY_BADGES[api.stability],
+        stability: api.stability,
+        description: api.description,
+        hasExamples: api.examples.length > 0,
+        examples: api.examples,
+        hasParams: !api.isProperty && api.params.length > 0,
+        params: _.map(api.params, function(d) {
+          return {
+            name: d.name,
+            validation: d.optional ? 'optional' : 'required',
+            types: d.types.join('|'),
+            description: d.description ? '... ' + d.description : ''
+          };
+        }),
+        hasTodos: api.todos.length > 0,
+        todos: api.todos
+      };
+    })
+    .groupBy('group')
+    .map(function(apis, group) {
+      return {
+        group: group,
+        apis: apis
+      };
+    })
+    .value();
   done(null, context);
 }
 
@@ -186,6 +188,6 @@ function dox(tpl) {
 // @todo: this should be wired to a precommit hook somewhere.
 gulp.task('docs', function() {
   return gulp.src('./lib/client.js')
-  .pipe(dox('./README.md.hbs'))
-  .pipe(gulp.dest('README.md'));
+    .pipe(dox('./README.md.hbs'))
+    .pipe(gulp.dest('README.md'));
 });
