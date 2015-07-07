@@ -1,5 +1,5 @@
-var assert = require('assert'),
-  helpers = require('./helpers');
+var assert = require('assert');
+var helpers = require('./helpers');
 
 describe('Database', function() {
   before(function(done) {

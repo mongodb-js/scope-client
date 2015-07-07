@@ -1,7 +1,5 @@
-var assert = require('assert'),
-  helpers = require('./helpers');
-
-var dataset;
+var assert = require('assert');
+var helpers = require('./helpers');
 
 function date(epoch) {
   var d = new Date();
@@ -10,8 +8,9 @@ function date(epoch) {
 }
 
 describe('Functional', function() {
-  var scope,
-    result = [], collection;
+  var scope;
+  var result = [];
+  var collection;
 
   before(function(done) {
     scope = helpers.createClient();
@@ -26,20 +25,20 @@ describe('Functional', function() {
 
     // @todo: Use mongodb-datasets.
     var docs = [
-        {
-          _id: 'first',
-          created_on: new Date(1405368259200)
-        },
-        {
-          _id: 'second',
-          created_on: new Date(1405368259210)
-        },
-        {
-          _id: 'third',
-          created_on: new Date(1405368259220)
-        }
-      ],
-      pending = docs.length;
+      {
+        _id: 'first',
+        created_on: new Date(1405368259200)
+      },
+      {
+        _id: 'second',
+        created_on: new Date(1405368259210)
+      },
+      {
+        _id: 'third',
+        created_on: new Date(1405368259220)
+      }
+    ];
+    var pending = docs.length;
 
     collection = scope.collection('test.ejson_dates');
     collection.create(function(err) {
@@ -61,7 +60,6 @@ describe('Functional', function() {
   });
 
   after(function(done) {
-    console.log('functional test teardown');
     collection.destroy(done);
   });
 
@@ -73,12 +71,12 @@ describe('Functional', function() {
   });
 
   it('should serialize dates in queries', function(done) {
-    var second_date = date(1405368259210),
-      query = {
-        created_on: {
-          $gt: second_date
-        }
-      };
+    var second_date = date(1405368259210);
+    var query = {
+      created_on: {
+        $gt: second_date
+      }
+    };
 
     scope.find('test.ejson_dates', {
       query: query

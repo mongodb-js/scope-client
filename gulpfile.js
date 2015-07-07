@@ -1,11 +1,12 @@
-var gulp = require('gulp'),
-  _dox = require('dox'),
-  fs = require('fs'),
-  pkg = require('./package.json'),
-  _ = require('underscore'),
-  _handlebars = require('handlebars'),
-  through = require('through2'),
-  gutil = require('gulp-util');
+var gulp = require('gulp');
+var _dox = require('dox');
+var fs = require('fs');
+var pkg = require('./package.json');
+var _ = require('underscore');
+var _handlebars = require('handlebars');
+var through = require('through2');
+var gutil = require('gulp-util');
+/*eslint consistent-return:0, no-console:0*/
 
 var STABILITY_BADGES = {
   deprecated: '![deprecated](http://b.repl.ca/v1/stability-deprecated-red.png)',
@@ -20,16 +21,16 @@ function getApis(methods, done) {
     if (method.ignore || method.isPrivate) return;
     if (method.description.full === '@ignore') return;
 
-    var stability,
-      isProperty = false,
-      params = [],
-      args = [],
-      opts_arg,
-      group,
-      options = [],
-      todos = [],
-      examples = [],
-      streamable = false;
+    var stability;
+    var isProperty = false;
+    var params = [];
+    var args = [];
+    var opts_arg;
+    var group;
+    var options = [];
+    var todos = [];
+    var examples = [];
+    var streamable = false;
 
     if (!method.ctx) return console.error('huh?', method);
 
@@ -37,7 +38,7 @@ function getApis(methods, done) {
       var matches;
 
       if (tag.type === 'param') {
-        tag.optional = (tag.name.indexOf('[') === 0);
+        tag.optional = tag.name.indexOf('[') === 0;
         tag.name = tag.name.replace('[', '').replace(']', '');
         if (tag.name === 'opts') {
           opts_arg = tag;
@@ -47,22 +48,31 @@ function getApis(methods, done) {
         return params.push(tag);
       }
       if (tag.type === 'option') {
-        matches = /\{(\w+)\} (\w+) ?(.*)?/.exec(tag.string);
+        matches = new RegExp('\{(\w+)\} (\w+) ?(.*)?').exec(tag.string);
         tag.types = [matches[1]];
         tag.name = matches[2];
         tag.description = matches[3] || '@todo';
         return options.push(tag);
       }
       if (tag.type === 'example') {
-        matches = /([\w\d\/\:\.]+) (.*)/.exec(tag.string);
+        matches = new RegExp('([\w\d\/\:\.]+) (.*)').exec(tag.string);
         return examples.push({
           name: matches[2],
           url: matches[1]
         });
       }
-      if (tag.type === 'group') return group = tag.string;
-      if (tag.type === 'stability') return stability = tag.string;
-      if (tag.type === 'streamable') return streamable = true;
+      if (tag.type === 'group') {
+        group = tag.string;
+        return;
+      }
+      if (tag.type === 'stability') {
+        stability = tag.string;
+        return;
+      }
+      if (tag.type === 'streamable') {
+        streamable = true;
+        return;
+      }
       if (tag.type === 'todo') {
         todos.push(tag.string);
       }

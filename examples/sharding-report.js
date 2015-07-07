@@ -1,13 +1,13 @@
-var mongoscope = window.mongoscopeClient,
-  $ = window.jQuery;
+var mongoscope = window.mongoscopeClient;
+var $ = window.jQuery;
 
 mongoscope.configure({
   endpoint: 'http://scope.mongodb.land',
   mongodb: 'localhost:30999'
 });
 
-var report = '',
-  $el = $('#container pre');
+var report = '';
+var $el = $('#container pre');
 
 function buf(s) {
   report += s + '\n';
@@ -28,15 +28,15 @@ mongoscope.sharding(function(err, res) {
     buf('### `' + col._id + '`\n');
     buf('- shard on `' + JSON.stringify(col.shard_key) + '`');
     buf('- tags `' + (col.tags.length ? col.tags.join(', ') : 'none') + '`');
-    buf('- storage ' + col.stats.storage_size +
-      ', documents ' + col.stats.document_size +
-      ', indexes ' + col.stats.index_size);
+    buf('- storage ' + col.stats.storage_size
+      + ', documents ' + col.stats.document_size
+      + ', indexes ' + col.stats.index_size);
     buf('- documents ' + col.stats.document_count);
     buf('- indexes ' + col.stats.index_count);
 
     // @todo: there should be some tolerance to showing warnings if
     // distribution is off target.
-    var target = (1 / col.shards.length) * 100;
+    var target = 1 / col.shards.length * 100;
 
     buf('- target distribution per shard ' + target + '%');
     buf();

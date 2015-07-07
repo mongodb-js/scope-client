@@ -1,7 +1,7 @@
-var assert = require('assert'),
-  helpers = require('./helpers'),
-  datasets = require('mongodb-datasets'),
-  debug = require('debug')('mongoscope-client:test:streams');
+var assert = require('assert');
+var helpers = require('./helpers');
+var datasets = require('mongodb-datasets');
+var debug = require('debug')('mongoscope-client:test:streams');
 
 describe.skip('Streams', function() {
   before(helpers.before.bind(this));
@@ -18,16 +18,14 @@ describe.skip('Streams', function() {
   });
 
   it('should have a working cursor', function(done) {
-    var seen = 0, expected;
+    var seen = 0;
+    var expected;
     helpers.client.count('local.startup_log', function(err, res) {
       assert.ifError(err);
       expected = res.count;
 
       helpers.client.find('local.startup_log')
-        .on('error', function(err) {
-          console.error(err);
-          done(err);
-        })
+        .on('error', done)
         .on('data', function() {
           seen++;
         })
@@ -68,7 +66,8 @@ describe.skip('Streams', function() {
     });
 
     it('should support a batchSize option', function(done) {
-      var committed = 0, bulk;
+      var committed = 0;
+      var bulk;
 
       bulk = dest.createWriteStream({
         batchSize: 50

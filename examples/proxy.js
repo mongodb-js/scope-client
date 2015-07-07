@@ -1,7 +1,7 @@
 // window.mongoscopeClient.configure({endpoint: 'http://localhost:9092'});
 // window.mongoscope = window.mongoscopeClient();
-var $log = $('.container'),
-  i = 0;
+var $log = window.$('.container');
+var i = 0;
 
 var log = function(msg) {
   $log.prepend('<code><pre>' + i + '. ' + msg + '</pre></code>');

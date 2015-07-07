@@ -1,7 +1,8 @@
 // appease the jshint gods
-var mongoscope = window.mongoscopeClient,
-  $ = window.$,
-  infer = window.mongodbInfer;
+/*eslint no-console:0*/
+var mongoscope = window.mongoscopeClient;
+var $ = window.$;
+var infer = window.mongodbInfer;
 
 mongoscope.configure({
   endpoint: 'http://scope.mongodb.land'
@@ -10,6 +11,8 @@ mongoscope.configure({
 mongoscope.sample('canada.service_requests', {
   size: 20
 }, function(err, res) {
+  if (err) return console.error(err);
+
   $('.raw').text(JSON.stringify(res, null, 2));
 
   var schemas = res.map(infer);

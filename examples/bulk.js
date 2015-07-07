@@ -9,8 +9,9 @@
 // complete!
 // 81ms
 // ```
-var datasets = require('mongodb-datasets'),
-  scope = require('../')();
+/*eslint no-console:0*/
+var datasets = require('mongodb-datasets');
+var scope = require('../')();
 
 var size = 100;
 var schema = {
@@ -20,12 +21,12 @@ var ns = 'test.oid_and_number';
 
 console.log('Generating ' + size + ' documents and inserting them into `' + ns + '`...');
 
-var start = Date.now(),
-  docs = 0;
+var start = Date.now();
+var docs = 0;
 var backend = scope.collection(ns).createWriteStream()
   .on('end', function() {
     console.log('complete!');
-    console.log((Date.now() - start) + 'ms');
+    console.log(Date.now() - start + 'ms');
     scope.close();
   })
   .on('flush', function(res) {

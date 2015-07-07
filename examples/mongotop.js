@@ -1,14 +1,15 @@
 // appease the jshint gods
-var mongoscope = window.mongoscopeClient,
-  asciiTable = window.asciiTable,
-  $ = window.$;
+/*eslint no-console:0*/
+var mongoscope = window.mongoscopeClient;
+var AsciiTable = window.asciiTable;
+var $ = window.$;
 
 mongoscope.configure({
   endpoint: 'http://scope.mongodb.land'
 });
 
-var deltas = {},
-  namespaces = [];
+var deltas = {};
+var namespaces = [];
 var operations = ['queries', 'inserts', 'removes', 'updates', 'getmore'];
 
 function loop() {
@@ -18,8 +19,8 @@ function loop() {
 
 
   setInterval(function() {
-    var table = new asciiTable('top: ' + new Date()),
-      columns = ['namespace'];
+    var table = new AsciiTable('top: ' + new Date());
+    var columns = ['namespace'];
 
     columns.push.apply(columns, operations);
     table.setHeading(columns);
@@ -31,7 +32,8 @@ function loop() {
       }));
       table.addRow(row);
     });
-    $('.container').append('<div class="row"><code><pre>' + table.toString() + '</pre></code></div>');
+    $('.container').append('<div class="row"><code><pre>'
+      + table.toString() + '</pre></code></div>');
     document.body.scrollTop = document.body.scrollHeight;
     deltas = {};
   }, 1000);
