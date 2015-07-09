@@ -14,10 +14,6 @@ module.exports = {
     return module.exports.client;
   },
   before: function(done) {
-    if (!this || !this.test) {
-      console.trace('Wha? No this.test?');
-    }
-    // debug('before: %s', this.test.name);
     module.exports.createClient()
       .once('error', done)
       .once('readable', done.bind(null, null));

@@ -49,9 +49,14 @@ mongoscope.sharding(function(err, res) {
         return buf('- **warning** empty shard\n');
       }
 
-      s.stats.document_share = (s.stats.document_count / col.stats.document_count * 100).toFixed(2);
-      s.stats.document_storage_share = (s.stats.document_size / col.stats.document_size * 100).toFixed(2);
-      s.stats.storage_share = (s.stats.storage_size / col.stats.storage_size * 100).toFixed(2);
+      s.stats.document_share = (s.stats.document_count / col.stats.document_count * 100)
+        .toFixed(2);
+
+      s.stats.document_storage_share = (s.stats.document_size / col.stats.document_size * 100)
+        .toFixed(2);
+
+      s.stats.storage_share = (s.stats.storage_size / col.stats.storage_size * 100)
+        .toFixed(2);
 
       if (s.stats.document_share > target) {
         s.warnings.push('EHIGHDOCS');
@@ -75,7 +80,8 @@ mongoscope.sharding(function(err, res) {
         buf('- **warning** ' + s.warnings.join(', '));
       }
 
-      buf('- documents (' + s.stats.document_share + '%) ' + 'storage (' + s.stats.document_storage_share + '%)');
+      buf('- documents (' + s.stats.document_share + '%) '
+        + 'storage (' + s.stats.document_storage_share + '%)');
 
       buf();
       s.chunks.map(function(chunk) {
