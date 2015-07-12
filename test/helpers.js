@@ -1,5 +1,6 @@
 var scout = require('../');
 var debug = require('debug')('scout-client:test:helpers');
+require('phantomjs-polyfill');
 
 scout.configure({
   endpoint: 'http://localhost:29017',
@@ -14,9 +15,9 @@ module.exports = {
     return module.exports.client;
   },
   before: function(done) {
-    module.exports.createClient()
-      .once('error', done)
-      .once('readable', done.bind(null, null));
+    debug('before: creating client');
+    module.exports.createClient();
+    done();
   },
   after: function(done) {
     if (!module.exports.client) {
