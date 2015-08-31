@@ -47,6 +47,7 @@
     "mocha": "^2.2.5",
     "mongodb-datasets": "^0.1.5",
     "mongodb-js-precommit": "^0.1.4",
+    "mongodb-runner": "mongodb-js/runner",
     "phantomjs": "^1.9.18",
     "phantomjs-polyfill": "0.0.1",
     "pre-commit": "^1.1.1",
