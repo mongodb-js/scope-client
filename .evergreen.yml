@@ -1,0 +1,132 @@
+# Evergreen CI configuration
+# Derived from sample at https://github.com/evergreen-ci/evergreen/blob/master/config_dev/project/sample.yml
+
+stepback: false
+
+pre:
+- command: shell.track
+
+post:
+- command: shell.cleanup
+
+#######################################
+#            Functions                #
+#######################################
+
+functions:
+  "fetch source" :
+    - command: git.get_project
+      params:
+        directory: src
+    - command: git.apply_patch
+      params:
+        directory: src
+  "npm install" :
+    - command: shell.exec
+      params:
+        working_dir: src
+        script: |
+          set -o errexit
+          set -o verbose
+          export PATH="$PATH:${add_path|}"
+          test -n "${add_environment|}" && export "${add_environment|}"
+          ${node|node} --version
+          ${npm|npm} --version
+          ${npm|npm} install
+  "npm test" :
+    - command: shell.exec
+      params:
+        working_dir: src
+        script: |
+          set -o errexit
+          set -o verbose
+          export PATH="$PATH:${add_path|}"
+          test -n "${add_environment|}" && export "${add_environment|}"
+          ${npm|npm} run ci
+  # "npm release" :
+  #   - command: shell.exec
+  #     params:
+  #       working_dir: src
+  #       script: |
+  #         set -o errexit
+  #         set -o verbose
+  #         export PATH="$PATH:${add_path|}"
+  #         test -n "${add_environment|}" && export "${add_environment|}"
+  #         ${npm|npm} run release
+
+#######################################
+#               Tasks                 #
+#######################################
+
+tasks:
+- name: compile
+  depends_on: []
+  commands:
+  - func: "fetch source"
+  - func: "npm install"
+  - func: "npm test"
+  # - func: "npm release"
+  # - command: s3.put
+  #   params:
+  #     aws_key: ${aws_key}
+  #     aws_secret: ${aws_secret}
+  #     local_file: "src/dist/${installer_filename}"
+  #     remote_file: "mongodbjs-scout-server/${build_variant}/${revision}/${installer_filename}"
+  #     bucket: mciuploads
+  #     permissions: public-read
+  #     content_type: ${installer_content_type|application/octet-stream}
+  #     display_name: "Installer: ${installer_filename}"
+
+# - name: test
+#   depends_on:
+#   - name: compile
+#   commands:
+#   - func: "npm test"
+
+
+#######################################
+#           Buildvariants             #
+#######################################
+
+buildvariants:
+- name: osx-108
+  display_name: OS X 10.8
+  modules: ~
+  run_on:
+  - "osx-108"
+  expansions:
+    add_path: /opt/node/bin
+    # installer_filename: "MongoDB Scout.dmg"
+    num_cores: $(sysctl -n hw.logicalcpu)
+  tasks:
+  - name: compile
+
+- name: windows-64
+  display_name: Windows 64-bit
+  modules: ~
+  run_on:
+  - "windows-64-vs2013-test"
+  expansions:
+    add_environment: "APPDATA=C:\\Program Files (x86)\\nodejs\\node_modules"
+    add_path: "/cygdrive/c/Program Files (x86)/nodejs"
+    # installer_filename: "MongoDB Scout.exe"
+    exe: ".exe"
+    num_cores: $(grep -c ^processor /proc/cpuinfo)
+  tasks:
+  - name: compile
+
+## ubuntu buildvariant is ready to go when we're ready to add tasks/linux.js
+
+# - name: ubuntu
+#   display_name: Ubuntu
+#   modules: ~
+#   run_on:
+#   - "ubuntu1404-test"
+#   expansions:
+#     add_environment: ""
+#     add_path: "/opt/node/bin"
+#     compile_env: CC=/opt/mongodbtoolchain/bin/gcc CXX=/opt/mongodbtoolchain/bin/g++
+#     num_cores: $(grep -c ^processor /proc/cpuinfo)
+#   tasks:
+#   - name: compile
+#   # - name: test
