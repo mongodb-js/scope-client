@@ -1,5 +1,8 @@
 var assert = require('assert');
 var helpers = require('./helpers');
+var es = require('event-stream');
+var _range = require('lodash.range');
+
 var debug = require('debug')('scout-client:test:sampling');
 
 describe('Sampling', function() {
@@ -32,10 +35,44 @@ describe('Sampling', function() {
   });
 
   describe('Streaming', function() {
+    var client;
+    var collection;
+
+    before(function(done) {
+      helpers.before(function() {
+        client = helpers.client;
+        collection = client.collection('test.numbers');
+        collection.create(function(err) {
+          if (err) return done(err);
+
+          var docs = _range(0, 100).map(function(i) {
+            return {
+              _id: i
+            };
+          });
+          var src = es.readArray(docs);
+          var dest = collection.createWriteStream()
+            .on('error', done)
+            .on('end', function() {
+              debug('inserted 100 docs');
+              done();
+            });
+
+          src.pipe(dest);
+        });
+      });
+    });
+    after(function(done) {
+      collection.destroy(function(err) {
+        if (err) return done(err);
+        helpers.after(done);
+      });
+    });
     it('should work', function(done) {
+      this.timeout(5000);
       var docs = [];
-      helpers.client.sample('local.startup_log', {
-        limit: 5
+      helpers.client.sample('test.numbers', {
+        size: 2
       })
         .on('error', done)
         .on('data', function(d) {
