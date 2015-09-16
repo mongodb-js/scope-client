@@ -2,6 +2,7 @@ var assert = require('assert');
 var helpers = require('./helpers');
 var es = require('event-stream');
 var _range = require('lodash.range');
+var bson = require('bson');
 
 var debug = require('debug')('scout-client:test:sampling');
 
@@ -37,6 +38,7 @@ describe('Sampling', function() {
   describe('Streaming', function() {
     var client;
     var collection;
+    var docs = [];
 
     before(function(done) {
       helpers.before(function() {
@@ -45,9 +47,9 @@ describe('Sampling', function() {
         collection.create(function(err) {
           if (err) return done(err);
 
-          var docs = _range(0, 100).map(function(i) {
+          docs = _range(0, 100).map(function() {
             return {
-              _id: i
+              _id: new bson.ObjectID()
             };
           });
           var src = es.readArray(docs);
@@ -68,20 +70,38 @@ describe('Sampling', function() {
         helpers.after(done);
       });
     });
-    it('should work', function(done) {
-      this.timeout(5000);
-      var docs = [];
+    it('should accept an explicit `size` parameter', function(done) {
+      var docsSeen = [];
       helpers.client.sample('test.numbers', {
         size: 2
       })
         .on('error', done)
         .on('data', function(d) {
           debug('got sampled doc from stream', d);
-          docs.push(d);
+          docsSeen.push(d);
         })
         .on('end', function() {
-          debug('Sample stream ended!', docs);
-          assert(docs.length > 0);
+          assert.equal(docsSeen.length, 2);
+          done();
+        });
+    });
+
+    it('should accept a `query` parameter with bson types', function(done) {
+      var docsSeen = [];
+      var query = {
+        _id: docs[0]._id
+      };
+      assert(query._id instanceof bson.ObjectID);
+      helpers.client.sample('test.numbers', {
+        query: query
+      })
+        .on('error', done)
+        .on('data', function(d) {
+          debug('got sampled doc from stream', d);
+          docsSeen.push(d);
+        })
+        .on('end', function() {
+          assert.equal(docsSeen.length, 1);
           done();
         });
     });
