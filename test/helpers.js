@@ -1,11 +1,6 @@
 var scout = require('../');
 var debug = require('debug')('scout-client:test:helpers');
-require('phantomjs-polyfill');
 
-// scout.configure({
-//   endpoint: 'http://localhost:29017',
-//   mongodb: 'localhost:27017'
-// });
 
 module.exports = {
   client: null,
