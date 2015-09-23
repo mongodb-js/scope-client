@@ -2,6 +2,7 @@ var scout = require('../');
 var debug = require('debug')('scout-client:test:helpers');
 
 var ENDPOINT = process.env.ENDPOINT || 'http://localhost:29017';
+process.env.ENDPOINT = ENDPOINT;
 
 /* eslint no-console:0 */
 console.error('  tests will be run against the '
