@@ -5,7 +5,7 @@ var ENDPOINT = process.env.ENDPOINT || 'http://localhost:29017';
 process.env.ENDPOINT = ENDPOINT;
 
 /* eslint no-console:0 */
-console.error('  tests will be run against the '
+debug('  tests will be run against the '
   + 'scout-server endpoint `%s`', ENDPOINT);
 
 module.exports = {
@@ -15,7 +15,7 @@ module.exports = {
     return module.exports.client;
   },
   before: function(done) {
-    debug('before: creating client');
+    debug('before: creating client', this.test);
     module.exports.createClient(ENDPOINT, 'localhost:27017');
     done();
   },
