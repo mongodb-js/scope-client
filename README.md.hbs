@@ -1,8 +1,8 @@
-# scout-client
+# scout-client [![][travis_img]][travis_url]
 
-A client for [scout-server](http://github.com/10gen/scout) that works in the browser or a server.
+> The client to talk to [scout-server][server] from node.js or the browser.
 
-Want to see what it can do? [Check out `./examples`](tree/dev/examples).
+Want to see what it can do? [Check out `./examples`][examples].
 
 ```
 npm install --save scout-client
@@ -11,15 +11,13 @@ npm install --save scout-client
 ## API
 
 ```javascript
-var scout = require('scout-client')([opts]);
+var scout = require('scout-client')([endpoint], [connection]);
 ```
 
 #### Parameters
 
-- `opts` (optional, Object) ...
-    - `scout` (String) ... Where scout-server is running [Default `http://localhost:29017`].
-    - `seed` (String) ... Hostport of mongodb instance [Default: `localhost:27017`].
-    - `auth` (Object) ... Auth spec [Default `{}`].
+- `endpoint` (optional, String) ... Where the server is running [Default `http://localhost:29017`].
+- `connection` (optional, Object|mongodb-connection-model) ... [MongoDB connection][connection-model] options [Default `{}`].
 
 {{#each apis_by_group}}
 ### {{group}}
@@ -58,8 +56,9 @@ var scout = require('scout-client')([opts]);
 {{/each}}
 {{/each}}
 
-## Development
 
-> Note: socket.io-stream 0.8.0 causes a `RangeError: Maximum call stack size exceeded at _hasBinary`.
-> We will investigate further when possible, but for now, socket.io-stream in dependencies
-> *should stay at 0.6.1*.
+[examples]: https://github.com/10gen/scout-client/tree/master/examples
+[server]: https://github.com/10gen/scout-server
+[connection-model]: https://github.com/mongodb-js/mongodb-connection-model
+[travis_img]: https://secure.travis-ci.org/10gen/scout-client.svg?branch=master
+[travis_url]: https://travis-ci.org/10gen/scout-client
