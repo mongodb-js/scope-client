@@ -2,7 +2,7 @@ var createClient = require('./helpers').createClient;
 var assert = require('assert');
 
 describe('Connection', function() {
-  it('should work with the defaults', function() {
+  it('should work with the defaults', function(done) {
     var client = createClient({
       autoconnect: false
     });
@@ -13,9 +13,11 @@ describe('Connection', function() {
     assert.equal(connection.port, 27017);
     assert.equal(connection.hostname, 'localhost');
     assert.equal(connection.instance_id, 'localhost:27017');
+
+    client.close(done);
   });
 
-  it('should have the correct auth credentials', function() {
+  it('should have the correct auth credentials', function(done) {
     var client = createClient({
       hostname: 'pet-store1.mongodb.parts',
       port: 27000,
@@ -32,5 +34,6 @@ describe('Connection', function() {
     assert.equal(connection.port, 27000);
     assert.equal(connection.hostname, 'pet-store1.mongodb.parts');
     assert.equal(connection.instance_id, 'pet-store1.mongodb.parts:27000');
+    client.close(done);
   });
 });

@@ -1,5 +1,5 @@
 // appease the jshint gods
-/*eslint no-console:0*/
+/* eslint no-console:0 */
 var mongoscope = window.mongoscopeClient;
 var AsciiTable = window.asciiTable;
 var $ = window.$;
@@ -45,4 +45,3 @@ mongoscope().top(function(err, data) {
   deltas = data.deltas;
   loop();
 });
-

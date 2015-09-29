@@ -1,3 +1,4 @@
+// @todo (imlucas): :axe: to `mongodb-js-dox`?
 var gulp = require('gulp');
 var _dox = require('dox');
 var fs = require('fs');
@@ -6,7 +7,11 @@ var _ = require('underscore');
 var _handlebars = require('handlebars');
 var through = require('through2');
 var gutil = require('gulp-util');
-/*eslint consistent-return:0, no-console:0*/
+var format = require('util').format;
+
+var debug = require('debug')('mongodb-js-dox');
+
+/* eslint consistent-return:0, no-console:0 */
 
 var STABILITY_BADGES = {
   deprecated: '![deprecated](http://b.repl.ca/v1/stability-deprecated-red.png)',
@@ -18,8 +23,10 @@ var STABILITY_BADGES = {
 function getApis(methods, done) {
   var apis = [];
   methods.map(function(method) {
-    if (method.ignore || method.isPrivate) return;
-    if (method.description.full === '@ignore') return;
+    if (method.ignore || method.description.full === '@ignore') {
+      debug('skipping ignored `%j`', method);
+      return;
+    }
 
     var stability;
     var isProperty = false;
@@ -44,17 +51,25 @@ function getApis(methods, done) {
           opts_arg = tag;
         }
         args.push(tag.name);
-
+        // debug('extracted param `%j`', tag);
         return params.push(tag);
       }
       if (tag.type === 'option') {
+        debug('extracting option from `%s`', tag.string);
         matches = new RegExp('\{(\w+)\} (\w+) ?(.*)?').exec(tag.string);
+        if (!matches) {
+          debug('doesnt match old regex.  skipping.');
+          return;
+        }
         tag.types = [matches[1]];
         tag.name = matches[2];
         tag.description = matches[3] || '@todo';
+
+        tag.description = tag.description.replace(' - ', '');
         return options.push(tag);
       }
       if (tag.type === 'example') {
+        // debug('adding link to example for `%s`', tag.string);
         matches = new RegExp('([\w\d\/\:\.]+) (.*)').exec(tag.string);
         return examples.push({
           name: matches[2],
@@ -62,29 +77,38 @@ function getApis(methods, done) {
         });
       }
       if (tag.type === 'group') {
+        // debug('adding group `%s`', tag.string);
         group = tag.string;
         return;
       }
       if (tag.type === 'stability') {
+        // debug('adding stability `%s`', tag.string);
         stability = tag.string;
         return;
       }
       if (tag.type === 'streamable') {
+        // debug('marking as streamable');
         streamable = true;
         return;
       }
       if (tag.type === 'todo') {
+        // debug('adding todo `%s`', tag.string);
         todos.push(tag.string);
       }
     });
 
     if (!isProperty && opts_arg && options.length > 0) {
-      opts_arg.description += '\n' + options.map(function(opt) {
-          return '    - `' + opt.name + '` (' + opt.types.join('|') + ') ... ' + opt.description;
-        }).join('\n') + '\n';
-    }
+      var optionsDescription = options.map(function(opt) {
+        return format('    - `%s` (%s) ... %s',
+          opt.name,
+          opt.types.join('|'),
+          opt.description.replace(' - ', '')
+        );
+      });
 
-    apis.push({
+      opts_arg.description += format('\n%s\n', optionsDescription.join('\n'));
+    }
+    var res = {
       name: method.ctx.name,
       group: group,
       stability: stability,
@@ -96,7 +120,9 @@ function getApis(methods, done) {
       todos: todos,
       source: method.code,
       examples: examples
-    });
+    };
+    debug('finished api is `%j`', res);
+    apis.push(res);
   });
 
   done(null, apis);
@@ -109,8 +135,15 @@ function getContext(apis, done) {
 
   context.apis_by_group = _.chain(apis)
     .filter(function(api, i) {
-      if (i === 0) return false; // @todo handle module level docs...
-      if (!api.group) return false; // private or ignore
+      if (i === 0) {
+        debug('skipping module.exports main entrypoint');
+        return false; // @todo handle module level docs...
+      }
+      if (!api.group) {
+        debug('Skipping api that has no group, is private or is ignored:\n',
+          JSON.stringify(api, null, 2));
+        return false; // private or ignore
+      }
       return true;
     })
     .map(function(api) {
@@ -172,6 +205,10 @@ function dox(tpl) {
       raw: true
     });
 
+    debug('dox found %d methods', methods.length, methods.map(function(m) {
+      return format('- %j', m.ctx.name);
+    }).join('\n'));
+
     getApis(methods, function(err, apis) {
       if (err) return abort(err);
 
@@ -182,9 +219,8 @@ function dox(tpl) {
           if (err) return abort(err);
           file.base = file.cwd;
           file.path = file.base;
-          console.log('rendering context', context);
+          // debug('Rendering template with context: \n', JSON.stringify(context, null, 2));
           var markdown = _handlebars.compile(buf)(context);
-          console.log('markdown', markdown);
           file.contents = new Buffer(markdown);
 
           self.push(file);
