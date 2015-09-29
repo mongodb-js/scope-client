@@ -9,3 +9,13 @@ script: npm run-script ci
 cache:
   directories:
     - node_modules
+env:
+  - MONGODB_VERSION=2.6.x MONGODB_TOPOLOGY=standalone
+  - MONGODB_VERSION=3.0.x MONGODB_TOPOLOGY=standalone
+  - MONGODB_VERSION=3.1.x MONGODB_TOPOLOGY=standalone
+  - MONGODB_VERSION=2.6.x MONGODB_TOPOLOGY=replicaset
+  - MONGODB_VERSION=3.0.x MONGODB_TOPOLOGY=replicaset
+  - MONGODB_VERSION=3.1.x MONGODB_TOPOLOGY=replicaset
+  - MONGODB_VERSION=2.6.x MONGODB_TOPOLOGY=cluster
+  - MONGODB_VERSION=3.0.x MONGODB_TOPOLOGY=cluster
+  - MONGODB_VERSION=3.1.x MONGODB_TOPOLOGY=cluster
