@@ -4,9 +4,9 @@ node_js:
 # before_install:
 #   - npm install -g npm@3
 script: npm run-script ci
-cache:
-  directories:
-    - node_modules
+# cache:
+#   directories:
+#     - node_modules
 env:
   - MONGODB_VERSION=2.6.x MONGODB_TOPOLOGY=standalone
   # - MONGODB_VERSION=3.0.x MONGODB_TOPOLOGY=standalone
