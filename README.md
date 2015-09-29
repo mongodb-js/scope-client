@@ -188,5 +188,5 @@ Convenience to get 1 document via `Client.prototype.sample`.
 [examples]: https://github.com/10gen/scout-client/tree/master/examples
 [server]: https://github.com/10gen/scout-server
 [connection-model]: https://github.com/mongodb-js/mongodb-connection-model
-[travis_img]: https://secure.travis-ci.org/10gen/scout-client.svg?branch=master
-[travis_url]: https://travis-ci.org/10gen/scout-client
+[travis_img]: https://magnum.travis-ci.com/10gen/scout-client.svg?token=q2zsnxCbboarF6KYRYxM
+[travis_url]: https://magnum.travis-ci.com/10gen/scout-client
