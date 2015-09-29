@@ -9,7 +9,7 @@
 // complete!
 // 81ms
 // ```
-/*eslint no-console:0*/
+/* eslint no-console:0 */
 var datasets = require('mongodb-datasets');
 var scope = require('../')();
 

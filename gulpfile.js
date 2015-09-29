@@ -1,3 +1,4 @@
+// @todo (imlucas): :axe: to `mongodb-js-dox`?
 var gulp = require('gulp');
 var _dox = require('dox');
 var fs = require('fs');
@@ -6,7 +7,7 @@ var _ = require('underscore');
 var _handlebars = require('handlebars');
 var through = require('through2');
 var gutil = require('gulp-util');
-/*eslint consistent-return:0, no-console:0*/
+/* eslint consistent-return:0, no-console:0 */
 
 var STABILITY_BADGES = {
   deprecated: '![deprecated](http://b.repl.ca/v1/stability-deprecated-red.png)',
@@ -79,9 +80,11 @@ function getApis(methods, done) {
     });
 
     if (!isProperty && opts_arg && options.length > 0) {
-      opts_arg.description += '\n' + options.map(function(opt) {
-          return '    - `' + opt.name + '` (' + opt.types.join('|') + ') ... ' + opt.description;
-        }).join('\n') + '\n';
+      var descrip = options.map(function(opt) {
+        return '    - `' + opt.name + '` (' + opt.types.join('|') + ') ... ' + opt.description;
+      }).join('\n');
+
+      opts_arg.description += '\n' + descrip + '\n';
     }
 
     apis.push({

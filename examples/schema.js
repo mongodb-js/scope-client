@@ -1,5 +1,5 @@
 // appease the jshint gods
-/*eslint no-console:0*/
+/* eslint no-console:0 */
 var mongoscope = window.mongoscopeClient;
 var $ = window.$;
 var infer = window.mongodbInfer;

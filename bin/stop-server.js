@@ -4,7 +4,7 @@ var runner = require('mongodb-runner');
 runner({
   action: 'stop'
 }, function() {
-  /*eslint no-console:0*/
+  /* eslint no-console:0 */
   require('./serverctl').stop(function(err) {
     if (err) {
       console.error(err);
