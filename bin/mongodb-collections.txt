@@ -1,0 +1,15 @@
+Usage: mongodb-collections <url> [endpoint]
+
+Show a list of MongoDB collection for any MongoDB URL using scout-client.
+
+Examples:
+  mongodb-collections mongodb://localhost:27017
+
+Arguments:
+  <url>                Any valid MongoDB URL.
+  [endpoint]           URL of scout-server [Default: `http://localhost:29017`].
+
+Options:
+  --debug              Enable debug messages.
+  -h --help            Show this screen.
+  --version            Show version.
