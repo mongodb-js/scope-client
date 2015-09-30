@@ -45,6 +45,7 @@
   },
   "devDependencies": {
     "backbone": "^1.2.3",
+    "bson": "^0.4.12",
     "del": "^2.0.2",
     "dox": "^0.8.0",
     "ecstatic": "^1.0.1",
