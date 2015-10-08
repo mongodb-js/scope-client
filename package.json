@@ -19,7 +19,7 @@
     "docs": "gulp docs",
     "start": "zuul --local 3001 --open -- test/*.test.js",
     "ci": "npm test",
-    "test": "DEBUG=* ./node_modules/.bin/zuul --electron -- test/*.test.js",
+    "test": "DEBUG=* zuul --electron -- test/*.test.js",
     "prestart": "node bin/start-server.js",
     "poststart": "node bin/stop-server.js",
     "pretest": "node bin/start-server.js",
