@@ -48,7 +48,7 @@
     "bson": "^0.4.16",
     "del": "^2.0.2",
     "dox": "^0.8.0",
-    "electron-prebuilt": "0.30.6",
+    "electron-prebuilt": "0.33.6",
     "eslint-config-mongodb-js": "^0.1.6",
     "gulp": "^3.9.0",
     "gulp-util": "^3.0.6",
