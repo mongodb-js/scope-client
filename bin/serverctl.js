@@ -53,7 +53,7 @@ module.exports.start = function(done) {
   });
 };
 
-module.exports.stop = function(done){
+module.exports.stop = function(done) {
   console.log('Stopping MongoDB...');
   runner({
     action: 'stop'
