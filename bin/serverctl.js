@@ -1,7 +1,9 @@
+/* eslint no-console:0 */
 var fs = require('fs');
 var path = require('path');
 var PID_FILE = path.resolve(__dirname, 'scout-server.pid');
 var child_process = require('child_process');
+var runner = require('mongodb-runner');
 var BIN = path.resolve(__dirname, '../node_modules/.bin/scout-server');
 var debug = require('debug')('scout-server:ctl');
 
@@ -17,7 +19,6 @@ var getPID = function(done) {
   });
 };
 
-
 var killIfRunning = function(done) {
   getPID(function(err, pid) {
     if (err) return done(err);
@@ -30,11 +31,7 @@ var killIfRunning = function(done) {
     debug('killing existing pid', pid);
     try {
       process.kill(pid, 'SIGTERM');
-    } catch (err) {
-      if (err.code === 'ESRCH') {
-        debug('orphaned pid file');
-      }
-    }
+    } catch (err) {}
 
     fs.unlink(PID_FILE, done);
   });
@@ -44,9 +41,24 @@ module.exports.start = function(done) {
   killIfRunning(function(err) {
     if (err) return done(err);
 
-    var server = child_process.fork(BIN);
-    fs.writeFile(PID_FILE, server.pid, done);
+    console.log('Starting MongoDB...');
+    runner({
+      action: 'start'
+    }, function(err) {
+      if (err) return done(err);
+      console.log('MongoDB started!  Starting server...');
+      var server = child_process.fork(BIN);
+      fs.writeFile(PID_FILE, server.pid, done);
+    });
   });
 };
 
-module.exports.stop = killIfRunning;
+module.exports.stop = function(done){
+  console.log('Stopping MongoDB...');
+  runner({
+    action: 'stop'
+  }, function() {
+    console.log('MongoDB stopped!  Stopping server...');
+    killIfRunning(done);
+  });
+};
