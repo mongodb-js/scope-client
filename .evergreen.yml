@@ -1,5 +1,10 @@
-# Evergreen CI configuration
-# Derived from sample at https://github.com/evergreen-ci/evergreen/blob/master/config_dev/project/sample.yml
+#######################################################################################
+# scout-client Evergreen CI configuration
+#
+# References:
+# https://github.com/evergreen-ci/evergreen/wiki/Project-Files
+# https://github.com/evergreen-ci/evergreen/blob/master/config_dev/project/sample.yml
+#######################################################################################
 
 stepback: false
 
@@ -8,6 +13,24 @@ pre:
 
 post:
 - command: shell.cleanup
+
+variables:
+# function "fetch npm tarball" is conditional on the following
+# -> all except windows
+- &fetch_npm_tarball_variants
+  - osx-108
+  - ubuntu
+
+# function "upgrade npm windows" is conditional based on {upgrade_npm_version}
+# as set in the buildvariant declaration
+# -> only windows
+
+# function "save release variants" is conditional on the following
+# -> all except ubuntu
+- &save_release_variants
+  - osx-108
+  - windows-64
+
 
 #######################################
 #            Functions                #
@@ -21,38 +44,84 @@ functions:
     - command: git.apply_patch
       params:
         directory: src
+    - command: shell.exec
+      params:
+        working_dir: src
+        script: |
+          mkdir .deps
+
+  # Install node,npm from a tarball in S3 to src/.deps/bin
+  # To use "npm" installed by this, each shell.exec script must add:
+  #     export PATH="$PATH:${node_path|}"
+  "fetch npm tarball" :
+    - command: s3.get
+      params:
+        build_variants:
+          *fetch_npm_tarball_variants
+        aws_key: ${aws_key_evergreen_integrations}
+        aws_secret: ${aws_secret_evergreen_integrations}
+        bucket: mongodb-dx-public
+        remote_file: evergreen-deps/${fetch_npm_tarball}
+        local_file: src/.deps/${fetch_npm_tarball}
+    - command: shell.exec
+      params:
+        working_dir: src/.deps
+        script: |
+          if [ -z "${fetch_npm_tarball|}" ]; then
+            echo "fetch_npm_tarball: fetch_npm_tarball is unset; skipping"
+            exit 0
+          fi
+          set -ev
+          tar xzf ${fetch_npm_tarball} --strip-components=1
+          ls
+
+  # THIS COMMAND WORKS ON WINDOWS ONLY, SHOULD BE CONSIDERED OBSOLETE
+  # To use "npm" installed by this, each shell.exec script must add:
+  #     export PATH="`npm -g bin`:$PATH"
+  "upgrade npm windows" :
+    - command: shell.exec
+      params:
+        working_dir: src
+        script: |
+          if [ -z "${upgrade_npm_version|}" ]; then
+            echo "upgrade_npm: upgrade_npm_version is unset; skipping"
+            exit 0
+          fi
+          set -ev
+          test -n "${add_environment|}" && export "${add_environment|}"
+          export PATH="$PATH:${node_path|}"
+          ${npm|npm} install -g npm@${upgrade_npm_version|xx}
+
   "npm install" :
     - command: shell.exec
       params:
         working_dir: src
         script: |
-          set -o errexit
-          set -o verbose
-          export PATH="$PATH:${add_path|}"
+          set -ev
           test -n "${add_environment|}" && export "${add_environment|}"
+          export PATH="$PATH:${node_path|}"
+          export PATH="`npm -g bin`:$PATH"
           ${node|node} --version
           ${npm|npm} --version
+          ${npm|npm} config set loglevel error
+          ${npm|npm} config -g list -l
           ${npm|npm} install
-  "npm test" :
+
+  "npm run ci" :
     - command: shell.exec
       params:
         working_dir: src
+        continue_on_err: false
         script: |
-          set -o errexit
-          set -o verbose
-          export PATH="$PATH:${add_path|}"
+          set -ev
           test -n "${add_environment|}" && export "${add_environment|}"
+          export PATH="$PATH:${node_path|}"
+          export PATH="`npm -g bin`:$PATH"
+          ${npm|npm} run check
           ${npm|npm} run ci
-  # "npm release" :
-  #   - command: shell.exec
-  #     params:
-  #       working_dir: src
-  #       script: |
-  #         set -o errexit
-  #         set -o verbose
-  #         export PATH="$PATH:${add_path|}"
-  #         test -n "${add_environment|}" && export "${add_environment|}"
-  #         ${npm|npm} run release
+    # - command: attach.results
+    #   params:
+    #     file_location: src/report.json
 
 #######################################
 #               Tasks                 #
@@ -63,25 +132,10 @@ tasks:
   depends_on: []
   commands:
   - func: "fetch source"
+  - func: "fetch npm tarball"
+  - func: "upgrade npm windows"
   - func: "npm install"
-  - func: "npm test"
-  # - func: "npm release"
-  # - command: s3.put
-  #   params:
-  #     aws_key: ${aws_key}
-  #     aws_secret: ${aws_secret}
-  #     local_file: "src/dist/${installer_filename}"
-  #     remote_file: "mongodbjs-scout-server/${build_variant}/${revision}/${installer_filename}"
-  #     bucket: mciuploads
-  #     permissions: public-read
-  #     content_type: ${installer_content_type|application/octet-stream}
-  #     display_name: "Installer: ${installer_filename}"
-
-# - name: test
-#   depends_on:
-#   - name: compile
-#   commands:
-#   - func: "npm test"
+  - func: "npm run ci"
 
 
 #######################################
@@ -95,9 +149,8 @@ buildvariants:
   run_on:
   - "osx-108"
   expansions:
-    add_path: /opt/node/bin
-    # installer_filename: "MongoDB Scout.dmg"
-    num_cores: $(sysctl -n hw.logicalcpu)
+    fetch_npm_tarball: node-v0.12.7-npm-3.3.5-darwin-x64.tgz
+    node_path: "$(pwd)/.deps/bin"
   tasks:
   - name: compile
 
@@ -108,25 +161,19 @@ buildvariants:
   - "windows-64-vs2013-test"
   expansions:
     add_environment: "APPDATA=C:\\Program Files (x86)\\nodejs\\node_modules"
-    add_path: "/cygdrive/c/Program Files (x86)/nodejs"
-    # installer_filename: "MongoDB Scout.exe"
-    exe: ".exe"
-    num_cores: $(grep -c ^processor /proc/cpuinfo)
+    npm_version: "3"
+    node_path: "/cygdrive/c/Program Files (x86)/nodejs"
   tasks:
   - name: compile
 
-## ubuntu buildvariant is ready to go when we're ready to add tasks/linux.js
-
-# - name: ubuntu
-#   display_name: Ubuntu
-#   modules: ~
-#   run_on:
-#   - "ubuntu1404-test"
-#   expansions:
-#     add_environment: ""
-#     add_path: "/opt/node/bin"
-#     compile_env: CC=/opt/mongodbtoolchain/bin/gcc CXX=/opt/mongodbtoolchain/bin/g++
-#     num_cores: $(grep -c ^processor /proc/cpuinfo)
-#   tasks:
-#   - name: compile
-#   # - name: test
+- name: ubuntu
+  display_name: Ubuntu 14.04
+  modules: ~
+  run_on:
+  - "ubuntu1404-test"
+  expansions:
+    fetch_npm_tarball: node-v0.12.7-npm-3.3.5-linux-x64.tar.gz
+    node_path: "$(pwd)/.deps/bin"
+    compile_env: CC=/opt/mongodbtoolchain/bin/gcc CXX=/opt/mongodbtoolchain/bin/g++
+  tasks:
+  - name: compile
