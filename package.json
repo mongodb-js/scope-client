@@ -19,11 +19,12 @@
     "docs": "gulp docs",
     "start": "zuul --local 3001 --open -- test/*.test.js",
     "ci": "npm test",
-    "test": "DEBUG=* ./node_modules/.bin/zuul --electron -- test/*.test.js",
+    "test": "zuul --electron -- test/*.test.js || npm run mandatory-cleanup",
+    "mandatory-cleanup": "node bin/stop-server.js",
     "prestart": "node bin/start-server.js",
-    "poststart": "node bin/stop-server.js",
+    "poststart": "npm run mandatory-cleanup",
     "pretest": "node bin/start-server.js",
-    "posttest": "node bin/stop-server.js"
+    "posttest": "npm run mandatory-cleanup"
   },
   "precommit": [
     "check"
