@@ -45,7 +45,7 @@
   },
   "devDependencies": {
     "backbone": "^1.2.3",
-    "bson": "^0.4.16",
+    "bson": "^0.4.19",
     "del": "^2.0.2",
     "dox": "^0.8.0",
     "electron-prebuilt": "0.30.6",
