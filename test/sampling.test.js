@@ -45,7 +45,9 @@ describe('Sampling', function() {
         client = helpers.client;
         collection = client.collection('test.numbers');
         collection.create(function(err) {
-          if (err) return done(err);
+          if (err) {
+            return done(err);
+          }
 
           docs = _range(0, 100).map(function() {
             return {
@@ -66,7 +68,9 @@ describe('Sampling', function() {
     });
     after(function(done) {
       collection.destroy(function(err) {
-        if (err) return done(err);
+        if (err) {
+          return done(err);
+        }
         helpers.after(done);
       });
     });

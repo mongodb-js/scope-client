@@ -42,11 +42,16 @@ describe('Functional', function() {
 
     collection = scope.collection('test.ejson_dates');
     collection.create(function(err) {
-      if (err) return done(err);
+      if (err) {
+        return done(err);
+      }
 
       docs.map(function(doc) {
+        /* eslint no-shadow:0 */
         scope.document('test.ejson_dates').create(doc, function(err, res) {
-          if (err) return done(err);
+          if (err) {
+            return done(err);
+          }
 
           result.push(res);
 
@@ -81,7 +86,9 @@ describe('Functional', function() {
     scope.find('test.ejson_dates', {
       query: query
     }, function(err, res) {
-      if (err) return done(err);
+      if (err) {
+        return done(err);
+      }
 
       assert(Array.isArray(res));
       assert.equal(res.length, 1);

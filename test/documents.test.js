@@ -5,7 +5,9 @@ describe('Documents', function() {
   before(helpers.before);
   after(function(done) {
     helpers.client.collection('test.scopes').destroy(function(err) {
-      if (err) return done(err);
+      if (err) {
+        return done(err);
+      }
       helpers.after(done);
     });
   });

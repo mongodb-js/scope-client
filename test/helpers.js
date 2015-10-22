@@ -29,7 +29,9 @@ module.exports = {
     module.exports.client.close(function(err) {
       debug('after: client closed');
 
-      if (err) return done(err);
+      if (err) {
+        return done(err);
+      }
       module.exports.client = null;
 
       debug('after: complete');

@@ -2,7 +2,7 @@
 var fs = require('fs');
 var path = require('path');
 var PID_FILE = path.resolve(__dirname, 'scout-server.pid');
-var child_process = require('child_process');
+var cp = require('child_process');
 var runner = require('mongodb-runner');
 var BIN = path.resolve(__dirname, '../node_modules/.bin/scout-server');
 var debug = require('debug')('scout-server:ctl');
@@ -31,25 +31,28 @@ var killIfRunning = function(done) {
     debug('killing existing pid', pid);
     try {
       process.kill(pid, 'SIGTERM');
-    } catch (err) {}
+    } catch (e) {
+      debug('orphan pid file');
+    }
 
     fs.unlink(PID_FILE, done);
   });
 };
 
 module.exports.start = function(done) {
+  var onStarted = function(err) {
+    if (err) return done(err);
+    console.log('MongoDB started!  Starting server...');
+    var server = cp.fork(BIN);
+    fs.writeFile(PID_FILE, server.pid, done);
+  };
   killIfRunning(function(err) {
     if (err) return done(err);
 
     console.log('Starting MongoDB...');
     runner({
       action: 'start'
-    }, function(err) {
-      if (err) return done(err);
-      console.log('MongoDB started!  Starting server...');
-      var server = child_process.fork(BIN);
-      fs.writeFile(PID_FILE, server.pid, done);
-    });
+    }, onStarted);
   });
 };
 

@@ -117,45 +117,45 @@ describe('Collection', function() {
       });
     });
   });
-  // @todo: Capped collections are wonky...
-  //
-  // describe.skip('Capped', function() {
-  //   var cappy;
-  //   before(function() {
-  //     cappy = scout.collection('test.cappy');
-  //   });
-  //   it('should not allow size AND max for capped collections', function(done) {
-  //     cappy.create({
-  //       capped: true,
-  //       max: 1024,
-  //       size: 100
-  //     }, function(err, res) {
-  //       assert(err, 'Should be an error: ' + res.text);
-  //       assert.equal(err.status, 400);
-  //       done();
-  //     });
-  //   });
-  //   it('should create a capped collection', function(done) {
-  //     cappy.create({
-  //       capped: true,
-  //       max: 10
-  //     }, function(err) {
-  //       assert.ifError(err);
-  //       done();
-  //     });
-  //   });
-  //   it('should be marked as capped by max 10', function(done) {
-  //     cappy.read(function(err, res) {
-  //       assert.ifError(err);
-  //       assert(res.features.capped);
-  //       assert.equal(res.features.max, 10);
-  //       done();
-  //     });
-  //   });
-  //   after(function(done) {
-  //     cappy.destroy(function(err) {
-  //       done(err);
-  //     });
-  //   });
-  // });
+// @todo: Capped collections are wonky...
+//
+// describe.skip('Capped', function() {
+//   var cappy;
+//   before(function() {
+//     cappy = scout.collection('test.cappy');
+//   });
+//   it('should not allow size AND max for capped collections', function(done) {
+//     cappy.create({
+//       capped: true,
+//       max: 1024,
+//       size: 100
+//     }, function(err, res) {
+//       assert(err, 'Should be an error: ' + res.text);
+//       assert.equal(err.status, 400);
+//       done();
+//     });
+//   });
+//   it('should create a capped collection', function(done) {
+//     cappy.create({
+//       capped: true,
+//       max: 10
+//     }, function(err) {
+//       assert.ifError(err);
+//       done();
+//     });
+//   });
+//   it('should be marked as capped by max 10', function(done) {
+//     cappy.read(function(err, res) {
+//       assert.ifError(err);
+//       assert(res.features.capped);
+//       assert.equal(res.features.max, 10);
+//       done();
+//     });
+//   });
+//   after(function(done) {
+//     cappy.destroy(function(err) {
+//       done(err);
+//     });
+//   });
+// });
 });

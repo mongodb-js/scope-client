@@ -4,7 +4,9 @@ var helpers = require('./helpers');
 describe('Database', function() {
   before(function(done) {
     helpers.before(function(err) {
-      if (err) return done(err);
+      if (err) {
+        return done(err);
+      }
       helpers.client.collection('test_db.nodbwithoutacollection').destroy(function() {
         done();
       });

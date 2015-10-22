@@ -170,10 +170,10 @@ function getContext(apis, done) {
       };
     })
     .groupBy('group')
-    .map(function(apis, group) {
+    .map(function(_apis, group) {
       return {
         group: group,
-        apis: apis
+        apis: _apis
       };
     })
     .value();
@@ -208,7 +208,7 @@ function dox(tpl) {
     debug('dox found %d methods', methods.length, methods.map(function(m) {
       return format('- %j', m.ctx.name);
     }).join('\n'));
-
+    /* eslint no-shadow:0 */
     getApis(methods, function(err, apis) {
       if (err) return abort(err);
 

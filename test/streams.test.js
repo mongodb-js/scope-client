@@ -58,7 +58,9 @@ describe.skip('Streams', function() {
       });
     });
     after(function(done) {
-      if (!dest) return done();
+      if (!dest) {
+        return done();
+      }
 
       dest.destroy(function() {
         done();
@@ -94,7 +96,9 @@ describe.skip('Streams', function() {
         .pipe(dest.createWriteStream({
           batchSize: 100
         }).on('end', function() {
-          if (complete) return done(new Error('Got end event more than once!'));
+          if (complete) {
+            return done(new Error('Got end event more than once!'));
+          }
           return (complete = true) && done();
         }).on('flush', function(res) {
           assert.equal(res.inserted_count, 10, 'inserted all 10 documents');
