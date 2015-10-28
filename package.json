@@ -49,7 +49,7 @@
     "del": "^2.0.2",
     "dox": "^0.8.0",
     "electron-prebuilt": "0.34.0",
-    "eslint-config-mongodb-js": "^1.0.3",
+    "eslint-config-mongodb-js": "^1.0.4",
     "gulp": "^3.9.0",
     "gulp-util": "^3.0.7",
     "handlebars": "^4.0.3",
