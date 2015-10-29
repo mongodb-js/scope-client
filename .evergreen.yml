@@ -8,18 +8,9 @@
 
 stepback: false
 
-pre:
-- command: shell.track
-
-post:
-- command: shell.cleanup
-
 variables:
-# function "fetch npm tarball" is conditional on the following
+# function "fetch npm tarball" is conditional on {fetch_npm_tarball}
 # -> all except windows
-- &fetch_npm_tarball_variants
-  - osx-108
-  - ubuntu
 
 # function "upgrade npm windows" is conditional based on {upgrade_npm_version}
 # as set in the buildvariant declaration
@@ -44,88 +35,153 @@ functions:
     - command: git.apply_patch
       params:
         directory: src
-    - command: shell.exec
-      params:
-        working_dir: src
-        script: |
-          mkdir .deps
 
   # Install node,npm from a tarball in S3 to src/.deps/bin
   # To use "npm" installed by this, each shell.exec script must add:
   #     export PATH="$PATH:${node_path|}"
-  "fetch npm tarball" :
-    - command: s3.get
-      params:
-        build_variants:
-          *fetch_npm_tarball_variants
-        aws_key: ${aws_key_evergreen_integrations}
-        aws_secret: ${aws_secret_evergreen_integrations}
-        bucket: mongodb-dx-public
-        remote_file: evergreen-deps/${fetch_npm_tarball}
-        local_file: src/.deps/${fetch_npm_tarball}
-    - command: shell.exec
-      params:
-        working_dir: src/.deps
-        script: |
-          if [ -z "${fetch_npm_tarball|}" ]; then
-            echo "fetch_npm_tarball: fetch_npm_tarball is unset; skipping"
-            exit 0
-          fi
-          set -ev
-          tar xzf ${fetch_npm_tarball} --strip-components=1
-          ls
+  #
+  # Only when this is a single-step command can we reuse via *fetch_npm_tarball below.
+  #
+  # Ubuntu:   has curl+wget
+  # Windows:  has curl
+  # OSX:      has curl
+  #
+  # So we use curl.
+  # Tried "command: s3.get" but it's challenging to blend into "setup ci" below.
+  # Also, command "s3.get"s extract_to target chokes on symlinks. EVG-609.
+  #
+  "fetch npm tarball" : &fetch_npm_tarball
+    command: shell.exec
+    params:
+      working_dir: src
+      script: |
+        mkdir -p .deps
+        set -ev
+        if [ -z "${fetch_npm_tarball|}" ]; then
+          echo "fetch_npm_tarball: fetch_npm_tarball is unset; skipping"
+          exit 0
+        fi
+        curl -fs \
+          -o ".deps/${fetch_npm_tarball}" \
+          --url "http://mongodb-dx-public.s3.amazonaws.com/evergreen-deps/${fetch_npm_tarball}"
+        cd .deps
+        tar xzf ${fetch_npm_tarball} --strip-components=1
 
   # THIS COMMAND WORKS ON WINDOWS ONLY, SHOULD BE CONSIDERED OBSOLETE
   # To use "npm" installed by this, each shell.exec script must add:
   #     export PATH="`npm -g bin`:$PATH"
-  "upgrade npm windows" :
-    - command: shell.exec
-      params:
-        working_dir: src
-        script: |
-          if [ -z "${upgrade_npm_version|}" ]; then
-            echo "upgrade_npm: upgrade_npm_version is unset; skipping"
-            exit 0
-          fi
-          set -ev
-          test -n "${add_environment|}" && export "${add_environment|}"
-          export PATH="$PATH:${node_path|}"
-          ${npm|npm} install -g npm@${upgrade_npm_version|xx}
+  "upgrade npm windows" : &upgrade_npm_windows
+    command: shell.exec
+    params:
+      working_dir: src
+      script: |
+        if [ -z "${upgrade_npm_version|}" ]; then
+          echo "upgrade_npm: upgrade_npm_version is unset; skipping"
+          exit 0
+        fi
+        set -ev
+        test -n "${node_environment|}" && export "${node_environment|}"
+        export PATH="$PATH:${node_path|}"
+        ${npm|npm} install -g npm@${upgrade_npm_version|xx}
 
   "npm install" :
-    - command: shell.exec
-      params:
-        working_dir: src
-        script: |
-          set -ev
-          test -n "${add_environment|}" && export "${add_environment|}"
-          export PATH="$PATH:${node_path|}"
-          export PATH="`npm -g bin`:$PATH"
-          ${node|node} --version
-          ${npm|npm} --version
-          ${npm|npm} config set loglevel error
-          ${npm|npm} config -g list -l
-          ${npm|npm} install
+    command: shell.exec
+    params:
+      working_dir: src
+      script: |
+        set -ev
+        test -n "${node_environment|}" && export "${node_environment|}"
+        export PATH="$PATH:${node_path|}"
+        export PATH="`npm -g bin`:$PATH"
+        ${node|node} --version
+        ${npm|npm} --version
+        ${npm|npm} config set loglevel error
+        ${npm|npm} config -g list -l
+        ${npm|npm} install
+
+  "npm run check" :
+    command: shell.exec
+    params:
+      working_dir: src
+      continue_on_err: false
+      script: |
+        set -ev
+        test -n "${node_environment|}" && export "${node_environment|}"
+        export PATH="$PATH:${node_path|}"
+        export PATH="`npm -g bin`:$PATH"
+        export CI=1 EVERGREEN=1
+        ${npm|npm} run check
 
   "npm run ci" :
+    command: shell.exec
+    params:
+      working_dir: src
+      continue_on_err: true
+      script: |
+        set -ev
+        test -n "${node_environment|}" && export "${node_environment|}"
+        export PATH="$PATH:${node_path|}"
+        export PATH="`npm -g bin`:$PATH"
+        export CI=1 EVERGREEN=1
+        test -n "${add_environment|}" && export ${add_environment|}
+        ${npm|npm} run ci
+
+# ---------------------------
+
+  # command: archive.targz_pack replaces symlinks with file copies. Avoid.
+  "snapshot save" :
     - command: shell.exec
       params:
         working_dir: src
         continue_on_err: false
         script: |
           set -ev
-          test -n "${add_environment|}" && export "${add_environment|}"
-          export PATH="$PATH:${node_path|}"
-          export PATH="`npm -g bin`:$PATH"
-          ${npm|npm} run check
-          ${npm|npm} run ci
-    # - command: attach.results
-    #   params:
-    #     file_location: src/report.json
+          tar czf snapshot.tgz *
+    - command: s3.put
+      params:
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_file: src/snapshot.tgz
+        remote_file: 10gen-scout-client-master/${build_variant}/${revision}/snapshot/${build_id}.tgz
+        bucket: mciuploads
+        permissions: public-read
+        content_type: application/tar
+        display_name: "Compile Snapshot"
+
+  # We cannot make a multistep "snapshot fetch" function that integrates
+  # into "setup ci" below. So copy task declarations.
+
+  "setup ci" :
+    - *fetch_npm_tarball
+    - *upgrade_npm_windows
+    - command: s3.get
+      params:
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        bucket: mciuploads
+        remote_file: 10gen-scout-client-master/${build_variant}/${revision}/snapshot/${build_id}.tgz
+        local_file: src/snapshot.tgz
+    - command: shell.exec
+      params:
+        working_dir: src
+        continue_on_err: false
+        script: |
+          set -ev
+          tar xzf snapshot.tgz
 
 #######################################
 #               Tasks                 #
 #######################################
+
+pre:
+- command: shell.track
+
+post:
+- command: attach.results
+  params:
+    file_location: src/report.json
+- command: shell.cleanup
+
 
 tasks:
 - name: compile
@@ -135,7 +191,24 @@ tasks:
   - func: "fetch npm tarball"
   - func: "upgrade npm windows"
   - func: "npm install"
+  - func: "npm run check"
+  - func: "snapshot save"
+
+- name: 30_standalone
+  depends_on:
+  - name: compile
+  commands:
+  - func: "setup ci"
   - func: "npm run ci"
+    vars:
+      add_environment: MONGODB_VERSION=3.0.x MONGODB_TOPOLOGY=standalone
+
+
+# Define shortcut for use below
+variables:
+- &all_tasks
+  - name: compile
+  - name: 30_standalone
 
 
 #######################################
@@ -152,7 +225,7 @@ buildvariants:
     fetch_npm_tarball: node-v0.12.7-npm-3.3.5-darwin-x64.tgz
     node_path: "$(pwd)/.deps/bin"
   tasks:
-  - name: compile
+    *all_tasks
 
 - name: windows-64
   display_name: Windows 64-bit
@@ -160,11 +233,11 @@ buildvariants:
   run_on:
   - "windows-64-vs2013-test"
   expansions:
-    add_environment: "APPDATA=C:\\Program Files (x86)\\nodejs\\node_modules"
-    npm_version: "3"
+    node_environment: "APPDATA=C:\\Program Files (x86)\\nodejs\\node_modules"
+    upgrade_npm_version: "3"
     node_path: "/cygdrive/c/Program Files (x86)/nodejs"
   tasks:
-  - name: compile
+    *all_tasks
 
 - name: ubuntu
   display_name: Ubuntu 14.04
@@ -176,4 +249,4 @@ buildvariants:
     node_path: "$(pwd)/.deps/bin"
     compile_env: CC=/opt/mongodbtoolchain/bin/gcc CXX=/opt/mongodbtoolchain/bin/g++
   tasks:
-  - name: compile
+    *all_tasks
