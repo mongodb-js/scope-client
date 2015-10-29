@@ -192,6 +192,7 @@ post:
   params:
     silent: true
     script: |
+      npm run posttest
       ${killall_evergreen|pkill -9 mongod; pkill -9 mongos; pkill -9 mongo} >/dev/null 2>&1
       exit 0
 - command: shell.cleanup
