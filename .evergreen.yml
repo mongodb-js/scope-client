@@ -136,7 +136,7 @@ functions:
         continue_on_err: false
         script: |
           set -ev
-          tar czf snapshot.tgz *
+          tar czf snapshot.tgz .zuul.yml *
     - command: s3.put
       params:
         aws_key: ${aws_key}
