@@ -175,11 +175,25 @@ functions:
 
 pre:
 - command: shell.track
+- command: shell.exec
+  params:
+    silent: true
+    script: |
+      ${killall_evergreen|pkill -9 mongod; pkill -9 mongos; pkill -9 mongo} >/dev/null 2>&1
+      rm -rf src /data/db/*
+      mkdir -p src
+      exit 0
 
 post:
 - command: attach.results
   params:
     file_location: src/report.json
+- command: shell.exec
+  params:
+    silent: true
+    script: |
+      ${killall_evergreen|pkill -9 mongod; pkill -9 mongos; pkill -9 mongo} >/dev/null 2>&1
+      exit 0
 - command: shell.cleanup
 
 
