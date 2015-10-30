@@ -200,6 +200,7 @@ post:
 tasks:
 - name: compile
   depends_on: []
+  exec_timeout_secs: 1200
   commands:
   - func: "fetch source"
   - func: "fetch npm tarball"
@@ -209,8 +210,8 @@ tasks:
   - func: "snapshot save"
 
 - name: 30_standalone
-  depends_on:
-  - name: compile
+  depends_on: [ { name: compile } ]
+  exec_timeout_secs: 900
   commands:
   - func: "setup ci"
   - func: "npm run ci"
