@@ -1,7 +1,7 @@
 {
   "name": "scout-client",
   "description": "A client for scout-server that works in the browser or a server.",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "author": "Lucas Hrabovsky <lucas@mongodb.com> (http://imlucas.com)",
   "homepage": "http://github.com/10gen/scout",
   "repository": {
