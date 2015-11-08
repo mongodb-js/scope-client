@@ -34,8 +34,8 @@ describe('Collection', function() {
     });
 
     it('should conflict if trying to create again', function(done) {
-      scout.collection('test.original_name').create(function(err, res) {
-        assert(err, 'Should be an error: ' + res.text);
+      scout.collection('test.original_name').create(function(err) {
+        assert(err);
         assert.equal(err.status, 409);
         done();
       });
@@ -52,8 +52,8 @@ describe('Collection', function() {
     });
 
     it('should now return a 404 for the original', function(done) {
-      scout.collection('test.original_name').read(function(err, res) {
-        assert(err, 'Should be an error: ' + res.text);
+      scout.collection('test.original_name').read(function(err) {
+        assert(err);
         assert.equal(err.status, 404, 'Got message: ' + err.message);
         done();
       });
