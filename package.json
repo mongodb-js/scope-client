@@ -61,7 +61,7 @@
     "mongodb-js-precommit": "^0.2.5",
     "mongodb-runner": "^3.1.13",
     "pre-commit": "^1.1.2",
-    "scout-server": "http://bin.mongodb.org/js/scout-server/v0.4.4/scout-server-0.4.4.tar.gz",
+    "scout-server": "http://bin.mongodb.org/js/scout-server/v0.4.5/scout-server-0.4.5.tar.gz",
     "through2": "^2.0.0",
     "zuul": "^3.7.2"
   }
