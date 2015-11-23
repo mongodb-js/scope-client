@@ -1,4 +1,7 @@
 #!/usr/bin/env node
+
+process.env.NODE_ENV = 'testing';
+
 var runner = require('mongodb-runner');
 
 runner({
