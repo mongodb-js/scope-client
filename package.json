@@ -36,7 +36,7 @@
     "event-stream": "^3.3.2",
     "lodash.omit": "^3.1.0",
     "lodash.trimright": "^3.0.2",
-    "mongodb-connection-model": "^3.0.6",
+    "mongodb-connection-model": "^3.0.8",
     "mongodb-extended-json": "^1.5.3",
     "mongodb-ns": "^1.0.0",
     "raf": "^3.1.0",
