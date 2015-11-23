@@ -1,12 +1,12 @@
 {
-  "name": "scout-client",
-  "description": "A client for scout-server that works in the browser or a server.",
+  "name": "mongodb-scope-client",
+  "description": "A client for mongodb-scope-server that works in the browser or a server.",
   "version": "0.4.3",
   "author": "Lucas Hrabovsky <lucas@mongodb.com> (http://imlucas.com)",
-  "homepage": "http://github.com/10gen/scout",
+  "homepage": "http://github.com/mongodb-js/scope-client",
   "repository": {
     "type": "git",
-    "url": "git://github.com/10gen/scout.git"
+    "url": "git://github.com/mongodb-js/scope-client.git"
   },
   "dependency-check": {
     "ignore": [
@@ -61,7 +61,7 @@
     "mongodb-js-precommit": "^0.2.5",
     "mongodb-runner": "^3.1.13",
     "pre-commit": "^1.1.2",
-    "scout-server": "http://bin.mongodb.org/js/scout-server/v0.4.5/scout-server-0.4.5.tar.gz",
+    "mongodb-scope-server": "http://bin.mongodb.org/js/mongodb-scope-server/v0.7.0/mongodb-scope-server-0.7.0.tar.gz",
     "through2": "^2.0.0",
     "zuul": "^3.7.2"
   }

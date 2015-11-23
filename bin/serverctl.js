@@ -1,11 +1,11 @@
 /* eslint no-console:0 */
 var fs = require('fs');
 var path = require('path');
-var PID_FILE = path.resolve(__dirname, 'scout-server.pid');
+var PID_FILE = path.resolve(__dirname, 'mongodb-scope-server.pid');
 var cp = require('child_process');
 var runner = require('mongodb-runner');
-var BIN = path.resolve(__dirname, '../node_modules/.bin/scout-server');
-var debug = require('debug')('scout-server:ctl');
+var BIN = path.resolve(__dirname, '../node_modules/.bin/mongodb-scope-server');
+var debug = require('debug')('mongodb-scope-server:ctl');
 
 var getPID = function(done) {
   fs.exists(PID_FILE, function(exists) {

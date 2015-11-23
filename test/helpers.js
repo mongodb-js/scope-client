@@ -1,17 +1,17 @@
-var scout = require('../');
-var debug = require('debug')('scout-client:test:helpers');
+var scope = require('../');
+var debug = require('debug')('mongodb-scope-client:test:helpers');
 
 var ENDPOINT = process.env.ENDPOINT || 'http://localhost:29017';
 process.env.ENDPOINT = ENDPOINT;
 
 /* eslint no-console:0 */
 debug('  tests will be run against the '
-  + 'scout-server endpoint `%s`', ENDPOINT);
+  + 'mongodb-scope-server endpoint `%s`', ENDPOINT);
 
 module.exports = {
   client: null,
   createClient: function() {
-    module.exports.client = scout.apply(null, arguments);
+    module.exports.client = scope.apply(null, arguments);
     return module.exports.client;
   },
   before: function(done) {

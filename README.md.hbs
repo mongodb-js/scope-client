@@ -1,17 +1,17 @@
-# scout-client [![][travis_img]][travis_url]
+# mongodb-scope-client [![][travis_img]][travis_url] [![][npm_img]][npm_url] [![][inch_img]][inch_url]
 
-> The client to talk to [scout-server][server] from node.js or the browser.
+> The client to talk to [mongodb-scope-server][server] from node.js or the browser.
 
 Want to see what it can do? [Check out `./examples`][examples].
 
 ```
-npm install --save scout-client
+npm install --save mongodb-scope-client
 ```
 
 ## API
 
 ```javascript
-var scout = require('scout-client')([endpoint], [connection]);
+var scope = require('mongodb-scope-client')([endpoint], [connection]);
 ```
 
 #### Parameters
@@ -23,7 +23,7 @@ var scout = require('scout-client')([endpoint], [connection]);
 ### {{group}}
 
 {{#each apis}}
-#### scout.{{name}} ({{args}})
+#### scope.{{name}} ({{args}})
 
 {{#if badge}}{{badge}}{{/if}}
 
@@ -56,9 +56,12 @@ var scout = require('scout-client')([endpoint], [connection]);
 {{/each}}
 {{/each}}
 
-
-[examples]: https://github.com/10gen/scout-client/tree/master/examples
-[server]: https://github.com/10gen/scout-server
-[connection-model]: https://github.com/mongodb-js/mongodb-connection-model
-[travis_img]: https://magnum.travis-ci.com/10gen/scout-client.svg?token=q2zsnxCbboarF6KYRYxM
-[travis_url]: https://magnum.travis-ci.com/10gen/scout-client
+[travis_img]: https://img.shields.io/travis/mongodb-js/scope-client.svg?style=flat-square
+[travis_url]: https://travis-ci.org/mongodb-js/scope-client
+[npm_img]: https://img.shields.io/npm/v/mongodb-scope-client.svg?style=flat-square
+[npm_url]: https://www.npmjs.org/package/mongodb-scope-client
+[inch_img]: http://inch-ci.org/github/mongodb-js/scope-client.svg?branch=master
+[inch_url]: http://inch-ci.org/github/mongodb-js/scope-client
+[examples]: https://github.com/mongodb-js/scope-client/tree/master/examples
+[server]: https://github.com/mongodb-js/scope-server
+[connection-model]: https://github.com/mongodb-js/connection-model

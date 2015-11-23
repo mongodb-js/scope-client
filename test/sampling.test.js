@@ -4,7 +4,7 @@ var es = require('event-stream');
 var _range = require('lodash.range');
 var bson = require('bson');
 
-var debug = require('debug')('scout-client:test:sampling');
+var debug = require('debug')('mongodb-scope-client:test:sampling');
 
 describe('Sampling', function() {
   before(helpers.before);

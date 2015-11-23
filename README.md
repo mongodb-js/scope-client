@@ -1,17 +1,17 @@
-# scout-client [![][travis_img]][travis_url]
+# mongodb-scope-client [![][travis_img]][travis_url] [![][npm_img]][npm_url] [![][inch_img]][inch_url]
 
-> The client to talk to [scout-server][server] from node.js or the browser.
+> The client to talk to [mongodb-scope-server][server] from node.js or the browser.
 
 Want to see what it can do? [Check out `./examples`][examples].
 
 ```
-npm install --save scout-client
+npm install --save mongodb-scope-client
 ```
 
 ## API
 
 ```javascript
-var scout = require('scout-client')([endpoint], [connection]);
+var scope = require('mongodb-scope-client')([endpoint], [connection]);
 ```
 
 #### Parameters
@@ -21,7 +21,7 @@ var scout = require('scout-client')([endpoint], [connection]);
 
 ### resource
 
-#### scout.instance (opts, fn)
+#### scope.instance (opts, fn)
 
 ![production](http://b.repl.ca/v1/stability-production-green.png)
 
@@ -35,7 +35,7 @@ like database_names, results of the hostInfo and buildInfo mongo commands.
 - `fn` (optional, Function) ... A response callback `(err, data)`
 
 
-#### scout.deployments (opts, fn)
+#### scope.deployments (opts, fn)
 
 ![production](http://b.repl.ca/v1/stability-production-green.png)
 
@@ -48,7 +48,7 @@ List all deployments this scout-server instance has connected to.
 - `fn` (optional, Function) ... A response callback `(err, data)`.
 
 
-#### scout.database (name, opts, fn)
+#### scope.database (name, opts, fn)
 
 ![production](http://b.repl.ca/v1/stability-production-green.png)
 
@@ -62,7 +62,7 @@ List collection names and stats.
 - `fn` (optional, Function) ... A response callback `(err, data)`.
 
 
-#### scout.collection (ns, opts, fn)
+#### scope.collection (ns, opts, fn)
 
 ![production](http://b.repl.ca/v1/stability-production-green.png)
 
@@ -76,7 +76,7 @@ Collection stats
 - `fn` (optional, Function) ... A response callback `(err, data)`
 
 
-#### scout.index (ns, name, opts, fn)
+#### scope.index (ns, name, opts, fn)
 
 ![development](http://b.repl.ca/v1/stability-development-yellow.png)
 
@@ -91,7 +91,7 @@ Index details
 - `fn` (optional, Function) ... A response callback `(err, data)`
 
 
-#### scout.document (ns, _id, opts, fn)
+#### scope.document (ns, _id, opts, fn)
 
 ![development](http://b.repl.ca/v1/stability-development-yellow.png)
 
@@ -108,7 +108,7 @@ Work with a single document.
 
 ### query
 
-#### scout.find (ns, opts, fn)
+#### scope.find (ns, opts, fn)
 
 ![production](http://b.repl.ca/v1/stability-production-green.png)
 
@@ -122,7 +122,7 @@ Run a query on `ns`.
 - `fn` (optional, Function) ... - A response callback `(err, data)`
 
 
-#### scout.count (ns, opts, fn)
+#### scope.count (ns, opts, fn)
 
 ![production](http://b.repl.ca/v1/stability-production-green.png)
 
@@ -136,7 +136,7 @@ Run a count on `ns`.
 - `fn` (optional, Function) ... A response callback `(err, data)`
 
 
-#### scout.aggregate (ns, pipeline, opts, fn)
+#### scope.aggregate (ns, pipeline, opts, fn)
 
 ![development](http://b.repl.ca/v1/stability-development-yellow.png)
 
@@ -154,7 +154,7 @@ Run an aggregation pipeline on `ns`.
 - `fn` (required, Function) ... A response callback `(err, data)`
 
 
-#### scout.sample (ns, opts, fn)
+#### scope.sample (ns, opts, fn)
 
 ![development](http://b.repl.ca/v1/stability-development-yellow.png)
 
@@ -169,7 +169,7 @@ get a slice of documents from a collection efficiently.
 - `fn` (required, Function) ... - A response callback `(err, data)`
 
 
-#### scout.random (ns, opts, fn)
+#### scope.random (ns, opts, fn)
 
 ![development](http://b.repl.ca/v1/stability-development-yellow.png)
 
@@ -184,9 +184,12 @@ Convenience to get 1 document via `Client.prototype.sample`.
 
 
 
-
-[examples]: https://github.com/10gen/scout-client/tree/master/examples
-[server]: https://github.com/10gen/scout-server
-[connection-model]: https://github.com/mongodb-js/mongodb-connection-model
-[travis_img]: https://magnum.travis-ci.com/10gen/scout-client.svg?token=q2zsnxCbboarF6KYRYxM
-[travis_url]: https://magnum.travis-ci.com/10gen/scout-client
+[travis_img]: https://img.shields.io/travis/mongodb-js/scope-client.svg?style=flat-square
+[travis_url]: https://travis-ci.org/mongodb-js/scope-client
+[npm_img]: https://img.shields.io/npm/v/mongodb-scope-client.svg?style=flat-square
+[npm_url]: https://www.npmjs.org/package/mongodb-scope-client
+[inch_img]: http://inch-ci.org/github/mongodb-js/scope-client.svg?branch=master
+[inch_url]: http://inch-ci.org/github/mongodb-js/scope-client
+[examples]: https://github.com/mongodb-js/scope-client/tree/master/examples
+[server]: https://github.com/mongodb-js/scope-server
+[connection-model]: https://github.com/mongodb-js/connection-model

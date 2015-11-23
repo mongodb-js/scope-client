@@ -2,11 +2,11 @@ var assert = require('assert');
 var helpers = require('./helpers');
 
 describe('Collection', function() {
-  var scout;
+  var scope;
 
   before(function(done) {
     helpers.before.call(this, function() {
-      scout = helpers.client;
+      scope = helpers.client;
       done();
     });
   });
@@ -14,19 +14,19 @@ describe('Collection', function() {
 
   describe('CRUD', function() {
     before(function(done) {
-      scout.collection('test.original_name').destroy(function() {
+      scope.collection('test.original_name').destroy(function() {
         done();
       });
     });
 
     it('should not allow invalid collection names', function() {
       assert.throws(function() {
-        scout.collection('test.awe $ome collection times!');
+        scope.collection('test.awe $ome collection times!');
       }, TypeError);
     });
 
     it('should create a new one', function(done) {
-      scout.collection('test.original_name').create(function(err, res) {
+      scope.collection('test.original_name').create(function(err, res) {
         assert.ifError(err);
         assert.equal(res._id, 'test.original_name');
         done();
@@ -34,7 +34,7 @@ describe('Collection', function() {
     });
 
     it('should conflict if trying to create again', function(done) {
-      scout.collection('test.original_name').create(function(err) {
+      scope.collection('test.original_name').create(function(err) {
         assert(err);
         assert.equal(err.status, 409);
         done();
@@ -42,7 +42,7 @@ describe('Collection', function() {
     });
 
     it('should rename it', function(done) {
-      scout.collection('test.original_name').update({
+      scope.collection('test.original_name').update({
         name: 'renamed'
       }, function(err, res) {
         assert.ifError(err);
@@ -52,7 +52,7 @@ describe('Collection', function() {
     });
 
     it('should now return a 404 for the original', function(done) {
-      scout.collection('test.original_name').read(function(err) {
+      scope.collection('test.original_name').read(function(err) {
         assert(err);
         assert.equal(err.status, 404, 'Got message: ' + err.message);
         done();
@@ -60,7 +60,7 @@ describe('Collection', function() {
     });
 
     it('should destroy one', function(done) {
-      scout.collection('test.renamed').destroy(function(err, res, raw) {
+      scope.collection('test.renamed').destroy(function(err, res, raw) {
         assert.ifError(err);
         assert.equal(raw.status, 204);
         done();
@@ -68,7 +68,7 @@ describe('Collection', function() {
     });
 
     it('should 404 for the renamed collection', function(done) {
-      scout.collection('test.renamed').read(function(err, res) {
+      scope.collection('test.renamed').read(function(err, res) {
         assert(err, 'Should be an error: ' + res.text);
         assert.equal(err.status, 404);
         done();
@@ -78,7 +78,7 @@ describe('Collection', function() {
 
   describe('Query', function() {
     it('should support low-level find', function(done) {
-      scout.find('local.startup_log', function(err, res) {
+      scope.find('local.startup_log', function(err, res) {
         assert.ifError(err);
 
         assert(Array.isArray(res));
@@ -87,7 +87,7 @@ describe('Collection', function() {
       });
     });
     it('should support count', function(done) {
-      scout.count('local.startup_log', function(err, res) {
+      scope.count('local.startup_log', function(err, res) {
         assert.ifError(err);
 
         assert(res.count > 0, 'count returned ' + JSON.stringify(res));
@@ -110,7 +110,7 @@ describe('Collection', function() {
         }
       }];
 
-      scout.aggregate('local.startup_log', pipeline, function(err, res) {
+      scope.aggregate('local.startup_log', pipeline, function(err, res) {
         assert.ifError(err);
         assert(res.length >= 1, 'No startup logs how? ' + JSON.stringify(res, null, 2));
         done();
@@ -122,7 +122,7 @@ describe('Collection', function() {
 // describe.skip('Capped', function() {
 //   var cappy;
 //   before(function() {
-//     cappy = scout.collection('test.cappy');
+//     cappy = scope.collection('test.cappy');
 //   });
 //   it('should not allow size AND max for capped collections', function(done) {
 //     cappy.create({
