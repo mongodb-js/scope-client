@@ -4,3 +4,4 @@ npm-debug.log
 build/
 dist/
 *.pid
+report.json
