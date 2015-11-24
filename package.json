@@ -13,6 +13,7 @@
       "mongodb-datasets"
     ]
   },
+  "license": "Apache-2.0",
   "scripts": {
     "check": "mongodb-js-precommit",
     "fmt": "mongodb-js-fmt lib/*.js test/*.js",
