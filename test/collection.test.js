@@ -117,7 +117,7 @@ describe('Collection', function() {
       });
     });
   });
-// @todo: Capped collections are wonky...
+// TODO: Capped collections are wonky...
 //
 // describe.skip('Capped', function() {
 //   var cappy;

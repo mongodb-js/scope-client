@@ -34,7 +34,7 @@ mongoscope.sharding(function(err, res) {
     buf('- documents ' + col.stats.document_count);
     buf('- indexes ' + col.stats.index_count);
 
-    // @todo: there should be some tolerance to showing warnings if
+    // TODO: there should be some tolerance to showing warnings if
     // distribution is off target.
     var target = 1 / col.shards.length * 100;
 

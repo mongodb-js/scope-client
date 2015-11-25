@@ -23,7 +23,7 @@ describe('Functional', function() {
     //   {_id: 'third', created_on: date(1405368259220)}
     // ]).pipe(inserter);
 
-    // @todo: Use mongodb-datasets.
+    // TODO: Use mongodb-datasets.
     var docs = [
       {
         _id: 'first',
