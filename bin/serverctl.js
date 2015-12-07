@@ -43,7 +43,7 @@ module.exports.start = function(done) {
   var onStarted = function(err) {
     if (err) return done(err);
     console.log('MongoDB started!  Starting server...');
-    var server = cp.fork(BIN);
+    var server = cp.fork(BIN, {stdio: 'inherit'});
     fs.writeFile(PID_FILE, server.pid, done);
   };
   killIfRunning(function(err) {
