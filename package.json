@@ -47,8 +47,8 @@
   },
   "devDependencies": {
     "backbone": "^1.2.3",
-    "bson": "^0.4.19",
     "del": "^2.1.0",
+    "bson": "^0.4.20",
     "dox": "^0.8.0",
     "eslint-config-mongodb-js": "^1.0.6",
     "gulp": "^3.9.0",
