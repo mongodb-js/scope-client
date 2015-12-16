@@ -64,6 +64,6 @@
     "mongodb-scope-server": "http://bin.mongodb.org/js/mongodb-scope-server/v0.10.0/mongodb-scope-server-0.10.0.tar.gz",
     "pre-commit": "^1.1.2",
     "through2": "^2.0.0",
-    "zuul": "^3.7.3"
+    "zuul": "^3.8.0"
   }
 }
