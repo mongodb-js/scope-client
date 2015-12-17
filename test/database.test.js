@@ -34,4 +34,12 @@ describe('Database', function() {
       done();
     });
   });
+
+  it('connects to databases with # in the name', function(done) {
+    helpers.client.database('test#blah').read(function(err, database) {
+      assert.ifError(err);
+      assert(database.name === 'test#blah');
+      done();
+    });
+  });
 });
