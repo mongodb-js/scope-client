@@ -33,6 +33,14 @@ describe('Collection', function() {
       });
     });
 
+    it('should create a new one with # in the name', function(done) {
+      scope.collection('test.testing#blah').create(function(err, res) {
+        assert.ifError(err);
+        assert.equal(res._id, 'test.testing#blah');
+        done();
+      });
+    });
+
     it('should conflict if trying to create again', function(done) {
       scope.collection('test.original_name').create(function(err) {
         assert(err);
@@ -61,6 +69,14 @@ describe('Collection', function() {
 
     it('should destroy one', function(done) {
       scope.collection('test.renamed').destroy(function(err, res, raw) {
+        assert.ifError(err);
+        assert.equal(raw.status, 204);
+        done();
+      });
+    });
+
+    it('should destroy one with # in the name', function(done) {
+      scope.collection('test.testing#blah').destroy(function(err, res, raw) {
         assert.ifError(err);
         assert.equal(raw.status, 204);
         done();
