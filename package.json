@@ -64,6 +64,6 @@
     "mongodb-scope-server": "^0.12.0",
     "pre-commit": "^1.1.2",
     "through2": "^2.0.0",
-    "zuul": "^3.8.0"
+    "zuul": "^3.9.0"
   }
 }
