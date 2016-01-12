@@ -41,7 +41,7 @@
     "mongodb-extended-json": "^1.5.7",
     "mongodb-ns": "^1.0.3",
     "raf": "^3.1.0",
-    "socket.io-client": "^1.4.2",
+    "socket.io-client": "^1.4.3",
     "socket.io-stream": "0.9.0",
     "superagent": "^1.6.1"
   },
