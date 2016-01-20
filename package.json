@@ -38,7 +38,7 @@
     "lodash.omit": "^3.1.0",
     "lodash.trimright": "^3.0.2",
     "mongodb-connection-model": "^3.0.10",
-    "mongodb-extended-json": "^1.5.7",
+    "mongodb-extended-json": "^1.6.2",
     "mongodb-ns": "^1.0.3",
     "raf": "^3.1.0",
     "socket.io-client": "^1.4.2",
