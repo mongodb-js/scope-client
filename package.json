@@ -35,7 +35,7 @@
     "async": "^1.5.2",
     "debug": "^2.2.0",
     "event-stream": "^3.3.2",
-    "lodash.omit": "^3.1.0",
+    "lodash.omit": "^4.1.0",
     "lodash.trimright": "^3.0.2",
     "mongodb-connection-model": "^3.0.10",
     "mongodb-extended-json": "^1.5.7",
