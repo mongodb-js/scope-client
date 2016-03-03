@@ -21,10 +21,10 @@
     "start": "zuul --local 3001 --open -- test/*.test.js",
     "ci": "npm test",
     "test": "mocha --reporter mocha-evergreen-reporter || npm run mandatory-cleanup",
-    "mandatory-cleanup": "mongodb-scope-server-stop --testing",
-    "prestart": "mongodb-scope-server-start --testing",
+    "mandatory-cleanup": "node bin/stop-server.js",
+    "prestart": "node bin/start-server.js",
     "poststart": "npm run mandatory-cleanup",
-    "pretest": "mongodb-scope-server-start --testing",
+    "pretest": "node bin/start-server.js",
     "posttest": "npm run mandatory-cleanup"
   },
   "precommit": [
