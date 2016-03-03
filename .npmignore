@@ -1,9 +1,13 @@
 bin/
+docs/
 examples/
 java/
 test/
-.jshintrc
+.eslintrc
+.evergreen.yml
 .jsfmtrc
-.zuul.yml
 .travis.yml
+.zuul.yml
 gulpfile.js
+report.json
+README.md.hbs
