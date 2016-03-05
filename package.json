@@ -1,7 +1,7 @@
 {
   "name": "mongodb-scope-client",
   "description": "A client for mongodb-scope-server that works in the browser or a server.",
-  "version": "0.10.1",
+  "version": "0.10.2",
   "author": "Lucas Hrabovsky <lucas@mongodb.com> (http://imlucas.com)",
   "homepage": "http://github.com/mongodb-js/scope-client",
   "repository": {
