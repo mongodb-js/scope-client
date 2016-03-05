@@ -124,7 +124,7 @@ functions:
         export PATH="`npm -g bin`:$PATH"
         export CI=1 EVERGREEN=1
         test -n "${add_environment|}" && export ${add_environment|}
-        ${npm|npm} run ci
+        ${npm|npm} run ci-evergreen
 
 # ---------------------------
 
