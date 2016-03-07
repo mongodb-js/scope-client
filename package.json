@@ -55,7 +55,7 @@
     "dox": "^0.8.0",
     "electron-mocha": "^0.8.0",
     "electron-prebuilt": "^0.36.9",
-    "eslint-config-mongodb-js": "^1.0.6",
+    "eslint-config-mongodb-js": "^2.0.0",
     "gulp": "^3.9.1",
     "gulp-util": "^3.0.7",
     "handlebars": "^4.0.5",
