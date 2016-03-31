@@ -19,7 +19,7 @@ variables:
 # function "save release variants" is conditional on the following
 # -> all except ubuntu
 - &save_release_variants
-  - osx-108
+  - osx-1010
   - windows-64
 
 
@@ -231,11 +231,11 @@ variables:
 #######################################
 
 buildvariants:
-- name: osx-108
-  display_name: OS X 10.8
+- name: osx-1010
+  display_name: OS X 10.10
   modules: ~
   run_on:
-  - "osx-108"
+  - "osx-1010"
   expansions:
     fetch_npm_tarball: node-v0.12.7-npm-3.3.5-darwin-x64.tgz
     node_path: "$(pwd)/.deps/bin"
