@@ -50,7 +50,7 @@
   },
   "devDependencies": {
     "backbone": "^1.2.3",
-    "bson": "^0.4.21",
+    "bson": "^0.4.23",
     "del": "^2.2.0",
     "dox": "^0.8.0",
     "electron-mocha": "^1.0.0",
