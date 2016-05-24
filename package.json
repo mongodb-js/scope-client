@@ -54,7 +54,7 @@
     "del": "^2.2.0",
     "dox": "^0.8.0",
     "electron-mocha": "^1.1.0",
-    "electron-prebuilt": "^0.37.2",
+    "electron-prebuilt": "^1.1.2",
     "eslint-config-mongodb-js": "^2.0.0",
     "gulp": "^3.9.1",
     "gulp-util": "^3.0.7",
