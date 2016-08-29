@@ -40,7 +40,7 @@
     "lodash.omit": "^4.2.1",
     "lodash.trimright": "^3.0.2",
     "mississippi": "^1.2.0",
-    "mongodb-connection-model": "^4.0.0",
+    "mongodb-connection-model": "^5.1.0",
     "mongodb-extended-json": "^1.6.3",
     "mongodb-ns": "^1.0.3",
     "raf": "^3.2.0",
