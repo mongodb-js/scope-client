@@ -59,7 +59,7 @@
     "gulp": "^3.9.1",
     "gulp-util": "^3.0.7",
     "handlebars": "^4.0.5",
-    "lodash.range": "^3.0.1",
+    "lodash.range": "^3.1.0",
     "mocha": "^3.0.2",
     "mocha-evergreen-reporter": "^0.0.7",
     "mongodb-datasets": "^0.1.5",
