@@ -41,7 +41,7 @@
     "lodash.trimright": "^3.0.2",
     "mississippi": "^1.2.0",
     "mongodb-connection-model": "^6.3.1",
-    "mongodb-extended-json": "^1.6.3",
+    "mongodb-extended-json": "1.8.0",
     "mongodb-ns": "^1.0.3",
     "raf": "^3.2.0",
     "socket.io-client": "^1.4.5",
