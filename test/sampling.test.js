@@ -74,7 +74,7 @@ describe('Sampling', function() {
         helpers.after(done);
       });
     });
-    it('should accept an explicit `size` parameter', function(done) {
+    it.skip('should accept an explicit `size` parameter', function(done) {
       var docsSeen = [];
       helpers.client.sample('test.numbers', {
         size: 2
@@ -90,7 +90,7 @@ describe('Sampling', function() {
         });
     });
 
-    it('should accept a `query` parameter with bson types', function(done) {
+    it.skip('should accept a `query` parameter with bson types', function(done) {
       var docsSeen = [];
       var query = {
         _id: docs[0]._id
